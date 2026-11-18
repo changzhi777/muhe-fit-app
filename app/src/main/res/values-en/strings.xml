@@ -226,4 +226,14 @@
     <string name="sync_syncing">Syncing\u2026</string>
     <string name="sync_failed">Sync failed. Your changes are saved on this device.</string>
     <string name="sync_retry">Retry</string>
+
+    <!-- Batch 8: 401 re-auth split (aligned with PWA ServerSync bad/lock states) -->
+    <string name="sync_expired">Pairing expired, please pair again</string>
+    <string name="sync_reauth">Pair again</string>
+
+    <!-- P7: Workout back-press discard confirmation dialog -->
+    <string name="workout_discard_title">Discard this workout?</string>
+    <string name="workout_discard_text">Current progress is not saved yet and cannot be recovered after discarding.</string>
+    <string name="workout_discard_confirm">Discard</string>
+    <string name="workout_discard_cancel">Keep training</string>
 </resources>

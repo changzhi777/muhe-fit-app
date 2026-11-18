@@ -1,5 +1,6 @@
 package com.muhe.fit.app.screens
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
@@ -59,6 +60,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
@@ -70,6 +72,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
+import com.muhe.fit.app.R
 import com.muhe.fit.app.lib.WorkoutModel
 import com.muhe.fit.app.lib.arr
 import com.muhe.fit.app.lib.bool
@@ -209,6 +212,27 @@ fun WorkoutScreen(
         val obs = LifecycleEventObserver { _, e -> if (e == Lifecycle.Event.ON_RESUME) vm.load() }
         owner.lifecycle.addObserver(obs)
         onDispose { owner.lifecycle.removeObserver(obs) }
+    }
+
+    // 🆕 P7a 返回拦截：Active 态系统返回先弹确认（route-scoped VM 随 pop 销毁，误触即丢会话——
+    // 真机验证 2026-11-19 发现）。「放弃」→ vm.discardWorkout() 回 Idle 态（屏自然换 StartChooser，
+    // 再按返回即退出路由，无需 nav 参数）；取消留在会话。Idle/Done 态不拦截。
+    var confirmDiscard by remember { mutableStateOf(false) }
+    BackHandler(enabled = state is WorkoutViewModel.UiState.Active) { confirmDiscard = true }
+    if (state is WorkoutViewModel.UiState.Active && confirmDiscard) {
+        AlertDialog(
+            onDismissRequest = { confirmDiscard = false },
+            title = { Text(stringResource(R.string.workout_discard_title)) },
+            text = { Text(stringResource(R.string.workout_discard_text)) },
+            confirmButton = {
+                TextButton(onClick = { confirmDiscard = false; vm.discardWorkout() }) {
+                    Text(stringResource(R.string.workout_discard_confirm))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { confirmDiscard = false }) { Text(stringResource(R.string.workout_discard_cancel)) }
+            },
+        )
     }
 
     Box(Modifier.fillMaxSize()) {

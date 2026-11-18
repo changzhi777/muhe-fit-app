@@ -13,8 +13,10 @@ import com.muhe.fit.app.lib.Js
 import com.muhe.fit.app.lib.arr
 import com.muhe.fit.app.lib.jn
 import com.muhe.fit.app.lib.jsTruthy
+import com.muhe.fit.app.lib.num
 import com.muhe.fit.app.lib.numOr
 import com.muhe.fit.app.lib.str
+import com.muhe.fit.app.lib.sub
 import com.muhe.fit.app.lib.SessionStart
 import com.muhe.fit.app.lib.SupersetFlow
 import com.muhe.fit.app.lib.WorkoutModel
@@ -424,15 +426,19 @@ class WorkoutViewModel @Inject constructor(
     /**
      * 加 drop（Workout.jsx addDropRow L130-142）：per-side 行 addSideDrop 两侧各按自己末 drop/侧重
      * seed（workout-model.js:303-309）；普通行 base = 末个 drop w 否则当前 w（workout-model.js:90-93
-     * + 135-150），r 沿 prev。PWA pct 取 entry.target.intensifier.pct + dropGrid snap；批 3 无
-     * intensifier/dropGrid 面，先 0.5 seed（引擎 clamp 1-90 → 实际 1% 减重，批 4 接配置后换真 pct）。
+     * + 135-150），r 沿 prev。🆕 P7b pct 接真配置：entry.target.intensifier（type=dropset）的 pct，
+     * 无配置 null → 引擎默认 20%（nextDropWeightCore clamp 1-90；旧批 3 硬 0.5 = 50% 减重系移植
+     * 偏差）。dropGrid snap 待器械库存数据面接入（后续批注记）。
      */
     fun addDrop(entryIdx: Int, setIdx: Int) {
+        val entry = active?.let { currentEntries(it).getOrNull(entryIdx) as? JsonObject }
+        val pct = entry?.sub("target")?.sub("intensifier")
+            ?.takeIf { it.str("type") == "dropset" }?.num("pct")
         mutSet(entryIdx, setIdx) { set ->
-            if (WorkoutModel.isSideSet(set)) return@mutSet WorkoutModel.addSideDrop(set, 0.5)
+            if (WorkoutModel.isSideSet(set)) return@mutSet WorkoutModel.addSideDrop(set, pct)
             val drops = WorkoutModel.dropsOf(set)
             val base = if (drops.isNotEmpty()) (drops.lastOrNull() as? JsonObject).numOr("w") else set.numOr("w")
-            WorkoutModel.addDrop(set, Js.obj("w" to jn(WorkoutModel.nextDropWeight(base, 0.5)), "r" to jn(set.numOr("r"))))
+            WorkoutModel.addDrop(set, Js.obj("w" to jn(WorkoutModel.nextDropWeight(base, pct)), "r" to jn(set.numOr("r"))))
         }
     }
 
@@ -701,7 +707,7 @@ class WorkoutViewModel @Inject constructor(
         val total = History.setUnitsTotal(entries)
         val done = History.setsDoneActive(a)
         val cur = (a["cur"] as? JsonPrimitive)?.intOrNull ?: 0
-        val view = a["workoutView"]?.toString() ?: "list"
+        val view = a.str("workoutView") ?: "list"
         _state.value = UiState.Active(a, entries, cur, done, total, entries.getOrNull(cur)?.str("name"), view)
     }
 

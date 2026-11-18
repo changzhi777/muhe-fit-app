@@ -228,4 +228,14 @@
     <string name="sync_syncing">同步中…</string>
     <string name="sync_failed">同步失败，更改已保存在本机</string>
     <string name="sync_retry">重试</string>
+
+    <!-- 批 8 · 401 重配对分流（对齐 PWA ServerSync bad/lock 档） -->
+    <string name="sync_expired">配对已失效，请重新配对</string>
+    <string name="sync_reauth">重新配对</string>
+
+    <!-- P7 · Workout 返回拦截确认弹窗 -->
+    <string name="workout_discard_title">放弃本次训练？</string>
+    <string name="workout_discard_text">当前训练进度尚未保存，放弃后将无法恢复。</string>
+    <string name="workout_discard_confirm">放弃训练</string>
+    <string name="workout_discard_cancel">继续训练</string>
 </resources>

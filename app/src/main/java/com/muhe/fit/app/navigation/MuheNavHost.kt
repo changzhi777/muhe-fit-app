@@ -203,7 +203,15 @@ fun MuheApp() {
                 // 首页（V1.6 列顶挂同步状态横幅：syncing 转圈 / failed 红字+重试 / ok 静默，
                 // 对齐 PWA SyncBanner 语义；状态源 SyncStateBus，重试经 SyncScheduler 防抖）
                 HomeScreen(
-                    header = { SyncBanner() },
+                    // 批 8 · 401 分流：token 失效 → SyncBanner VM.reauth 清 token + bus 复位
+                    // Idle，此处导航回登录页重新配对（launchSingleTop 防重复入栈）
+                    header = {
+                        SyncBanner(
+                            onReauth = {
+                                navController.navigate(Routes.LOGIN) { launchSingleTop = true }
+                            },
+                        )
+                    },
                     onCheckInClick = { navController.navigate(Routes.CHECKIN) },
                 )
             }

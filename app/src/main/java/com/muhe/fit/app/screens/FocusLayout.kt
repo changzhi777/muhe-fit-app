@@ -148,8 +148,9 @@ fun FocusLayout(
             Spacer(Modifier.height(4.dp))
             val dispSet = (setIdx + 1).coerceIn(1, setCount.coerceAtLeast(1))
             val dispEntry = (entryIdx + 1).coerceIn(1, entryCount.coerceAtLeast(1))
+            // P7c：分母同样钳 ≥1（空会话渲染时显示 1/1 而非 1/0）
             Text(
-                String.format(SET_PROGRESS_FMT, dispSet, setCount, dispEntry, entryCount),
+                String.format(SET_PROGRESS_FMT, dispSet, setCount.coerceAtLeast(1), dispEntry, entryCount.coerceAtLeast(1)),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )

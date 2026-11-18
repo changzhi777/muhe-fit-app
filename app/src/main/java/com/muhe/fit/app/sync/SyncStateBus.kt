@@ -24,9 +24,9 @@ sealed interface SyncUiState {
     data object Ok : SyncUiState
 
     /**
-     * 失败（横幅：红字 + 重试）。error 随行给后续分流用：
-     * status null = 离线（PWA off 档）、401 = 待重配对（bad/lock 档，M1 遗留未分流——
-     * strings 三键纪律下暂统一「同步失败」文案，分流随 M2 批次）。
+     * 失败（横幅：红字 + 重试）。error 随行给分流用：
+     * status null = 离线（PWA off 档）；401 = 待重配对（bad/lock 档，批 8 已分流——
+     * 「配对已失效」+「重新配对」，清 token + 复位 Idle 在 SyncBannerViewModel.reauth）。
      */
     data class Failed(val error: SyncError) : SyncUiState
 }
