@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- P9 T1：白色杠铃（无品牌图形资产时的几何矢量自绘，裁定白名单内零依赖） -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- 横杆 -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M30,52 h48 a2,2 0 0 1 2,2 v0 a2,2 0 0 1 -2,2 h-48 a2,2 0 0 1 -2,-2 v0 a2,2 0 0 1 2,-2 z" />
+    <!-- 内杠铃片 ×2（高片，贴近横杆内端） -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M34,34 h6 a3,3 0 0 1 3,3 v34 a3,3 0 0 1 -3,3 h-6 a3,3 0 0 1 -3,-3 v-34 a3,3 0 0 1 3,-3 z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M68,34 h6 a3,3 0 0 1 3,3 v34 a3,3 0 0 1 -3,3 h-6 a3,3 0 0 1 -3,-3 v-34 a3,3 0 0 1 3,-3 z" />
+    <!-- 外杠铃片 ×2（矮片，轮廓外扩） -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M25,41 h6 a3,3 0 0 1 3,3 v20 a3,3 0 0 1 -3,3 h-6 a3,3 0 0 1 -3,-3 v-20 a3,3 0 0 1 3,-3 z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M77,41 h6 a3,3 0 0 1 3,3 v20 a3,3 0 0 1 -3,3 h-6 a3,3 0 0 1 -3,-3 v-20 a3,3 0 0 1 3,-3 z" />
+</vector>

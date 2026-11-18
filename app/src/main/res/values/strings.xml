@@ -233,6 +233,17 @@
     <string name="sync_expired">配对已失效，请重新配对</string>
     <string name="sync_reauth">重新配对</string>
 
+    <!-- P9 · Workout 屏 UX 三件套（折叠已完成/refLine/紧凑视图，JS Workout.jsx 真源） -->
+    <string name="workout_layout_compact">紧凑视图</string>
+    <string name="workout_collapse_completed">折叠已完成动作</string>
+    <string name="workout_collapse_sub">保持当前动作展开</string>
+    <string name="workout_collapse_fold">收起</string>
+    <string name="workout_collapse_sets_suffix"> 组</string>
+    <string name="workout_ref_last">上次</string>
+
+    <!-- P9 · 统计瓦片 streak 周口径（JS Stats.jsx:642 "Week streak"） -->
+    <string name="stats_tile_streak_weeks">连续周数</string>
+
     <!-- P7 · Workout 返回拦截确认弹窗 -->
     <string name="workout_discard_title">放弃本次训练？</string>
     <string name="workout_discard_text">当前训练进度尚未保存，放弃后将无法恢复。</string>

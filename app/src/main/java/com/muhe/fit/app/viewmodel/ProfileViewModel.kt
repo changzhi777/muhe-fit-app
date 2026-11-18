@@ -85,7 +85,9 @@ class ProfileViewModel @Inject constructor(
             }
             monthSessions = monthDays.size
             // streak 用全史口径（与 StatsCalc.dayStreak / 打卡屏统计一致）：只看本月会在每月 1 号
-            // 把连续链砍成 0/1 天——CheckInViewModel 已裁定这是假信号，两页数字不得互相矛盾
+            // 把连续链砍成 0/1 天——CheckInViewModel 已裁定这是假信号，两页数字不得互相矛盾。
+            // P9 批 B：本页保持**日口径**（「本月训练 N 天 · 连续 N 天」同语境）；统计 Tab 瓦片
+            // 已换**周口径**（lib/Streak.kt，JS streakWeeks 移植）——两页口径有意不同，非矛盾
             val allDays = buildSet {
                 workouts.forEach { workout ->
                     runCatching { LocalDate.parse(workout.d) }.getOrNull()?.let { add(it) }

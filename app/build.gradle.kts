@@ -1,3 +1,4 @@
+import java.util.Properties
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -16,6 +17,14 @@ val muheVersionName = versionFile.takeIf { it.exists() }
     ?.takeIf { it.isNotEmpty() }
     ?: "0.0.0"
 
+// 🆕 P9 T2 release 签名：keystore.properties（本地不入仓，.gitignore）提供四键
+// storeFile/storePassword/keyAlias/keyPassword；文件缺失时 release 退回 debug 签名
+// （本地出包不受阻），CI/正式发布前按 README 生成 keystore。
+val keystorePropsFile = rootProject.file("keystore.properties")
+val muheKeystoreProps = Properties().apply {
+    if (keystorePropsFile.exists()) keystorePropsFile.inputStream().use { load(it) }
+}
+
 android {
     namespace = "com.muhe.fit.app"
     compileSdk = 35
@@ -28,6 +37,17 @@ android {
         versionName = muheVersionName
     }
 
+    signingConfigs {
+        if (muheKeystoreProps.isNotEmpty()) {
+            create("release") {
+                storeFile = file(muheKeystoreProps.getProperty("storeFile"))
+                storePassword = muheKeystoreProps.getProperty("storePassword")
+                keyAlias = muheKeystoreProps.getProperty("keyAlias")
+                keyPassword = muheKeystoreProps.getProperty("keyPassword")
+            }
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = true
@@ -36,6 +56,10 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
             )
+            // keystore.properties 在场才挂 release 签名，否则退 debug 签名（fail-soft）
+            if (muheKeystoreProps.isNotEmpty()) {
+                signingConfig = signingConfigs.getByName("release")
+            }
         }
     }
 

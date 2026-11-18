@@ -166,6 +166,18 @@ fun MuheApp() {
                         LEFT_TABS.forEach { tab ->
                             TabItem(tab, selected = currentRoute == tab.route, onClick = { goTab(tab.route) })
                         }
+                        // 🆕 中央占位（批 7 真机审查修复）：无占位时 4 项均分整栏，FAB 压在
+                        // 「计划/统计」交界上——Tab 间距 275px vs FAB↔相邻 Tab 仅 ~138px，观感挤压。
+                        // 占位后 5 等分：Tab 中心 108/324/756/972，FAB 同心 540，间距全 216px（M3
+                        // 中央 FAB 底栏标准做法）。占位 enabled=false 空内容零交互零绘制，
+                        // 点击由上层 Box 的 FAB 承接。
+                        NavigationBarItem(
+                            selected = false,
+                            onClick = {},
+                            enabled = false,
+                            icon = {},
+                            label = null,
+                        )
                         // ▶Start 右侧：统计 + 我的（5 Tab 下两侧各 2 个 NavigationBarItem）
                         RIGHT_TABS.forEach { tab ->
                             TabItem(tab, selected = currentRoute == tab.route, onClick = { goTab(tab.route) })

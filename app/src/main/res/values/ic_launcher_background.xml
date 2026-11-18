@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- P9 T1：启动图标底色 = MuhePrimary（ui/theme/Color.kt 同源 #30D158） -->
+    <color name="ic_launcher_background">#30D158</color>
+</resources>

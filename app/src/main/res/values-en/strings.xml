@@ -231,6 +231,17 @@
     <string name="sync_expired">Pairing expired, please pair again</string>
     <string name="sync_reauth">Pair again</string>
 
+    <!-- P9: Workout screen UX trio (collapse completed / refLine / compact view, JS Workout.jsx sources) -->
+    <string name="workout_layout_compact">Compact</string>
+    <string name="workout_collapse_completed">Collapse completed</string>
+    <string name="workout_collapse_sub">Keep the current exercise open</string>
+    <string name="workout_collapse_fold">Fold away</string>
+    <string name="workout_collapse_sets_suffix"> sets</string>
+    <string name="workout_ref_last">Last time</string>
+
+    <!-- P9: Stats tile streak weekly口径 (JS Stats.jsx:642 "Week streak") -->
+    <string name="stats_tile_streak_weeks">Week streak</string>
+
     <!-- P7: Workout back-press discard confirmation dialog -->
     <string name="workout_discard_title">Discard this workout?</string>
     <string name="workout_discard_text">Current progress is not saved yet and cannot be recovered after discarding.</string>

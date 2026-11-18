@@ -11,6 +11,7 @@ import com.muhe.fit.app.lib.FinishWorkout
 import com.muhe.fit.app.lib.History
 import com.muhe.fit.app.lib.Js
 import com.muhe.fit.app.lib.arr
+import com.muhe.fit.app.lib.bool
 import com.muhe.fit.app.lib.jn
 import com.muhe.fit.app.lib.jsTruthy
 import com.muhe.fit.app.lib.num
@@ -80,6 +81,12 @@ class WorkoutViewModel @Inject constructor(
     /** summary 简版瓦片数据。 */
     data class Summary(val name: String?, val durationMin: Long, val sets: Int, val vol: Double)
 
+    /**
+     * 组行参考值（P9 批 T4 · Workout.jsx refLine L253 MVP）：上次会话同位置完成组的 w×r。
+     * w/r 任一缺失即无参考（bodyweight 只记 r 的行不出参考线，见 refSetsFor 注记）。
+     */
+    data class SetRef(val w: Double, val r: Double)
+
     sealed interface UiState {
         /** 无进行中会话：StartChooser（routine 列表 + 自由练）。 */
         data class Idle(val routines: List<RoutineOption>) : UiState
@@ -93,6 +100,11 @@ class WorkoutViewModel @Inject constructor(
             val totalCount: Int,
             val curEntryName: String?,
             val workoutView: String = "list",  // 批 5：布局分叉（PWA Layout 菜单，"list"/"cards"，随档持久化）
+            // 🆕 P9 批 T3：折叠已完成开关（Workout.jsx A.collapseCompleted ?? S.collapseCompleted，
+            //   存档字段随档持久化；Layout 菜单第四项勾选态 + list/compact 视图折叠过滤共用）
+            val collapseCompleted: Boolean = false,
+            // 🆕 P9 批 T4：组行参考（refs[entryIdx][setIdx] = 上次会话同位组 w×r；无历史 = 空/null）
+            val refs: List<List<SetRef?>> = emptyList(),
         ) : UiState
 
         /** 完成确认页（FinishSummary 简版）。 */
@@ -116,6 +128,14 @@ class WorkoutViewModel @Inject constructor(
 
     /** 编辑已存会话标记（批 3b）：非空 = 本次会话源自 loadForEdit，完成时换回原 id 覆盖落库。 */
     private var editingWorkoutId: String? = null
+
+    /**
+     * 🆕 P9 批 T4 · 组行参考的历史缓存（Workout.jsx sessionHistory 对位）：Room workouts 全量
+     * raw 解析后按 start 升序（JS S.workouts 追加序 = 时间序，lastEntryFor 倒序扫 = 最新优先）。
+     * 会话开场（load 恢复 / beginSession / loadForEdit）刷一次，会话内不重扫（参考面只看历史，
+     * 与本会话编辑互不影响）；编辑模式下剔除正在编辑的条目自身（JS 编辑态同口径）。
+     */
+    private var historyCache: List<JsonObject> = emptyList()
 
     /**
      * 批 5 · 滑动删 undo token（Workout.jsx undoDeleteSet 语义）：entryIdx + 被删前的完整 sets
@@ -165,6 +185,7 @@ class WorkoutViewModel @Inject constructor(
                         editingWorkoutId = id
                         prefs.save(parsed)
                         highWater.clear()
+                        refreshHistory() // 🆕 P9 T4：编辑入口同刷缓存（剔除被编辑条目自身）
                         publishActive()
                         return@launch
                     }
@@ -172,6 +193,7 @@ class WorkoutViewModel @Inject constructor(
             }
             val saved = prefs.load()
             if (saved != null) {
+                refreshHistory() // 🆕 P9 T4：参考线历史缓存（publishActive 组 refs 用）
                 active = saved
                 highWater.clear()
                 publishActive()
@@ -220,6 +242,7 @@ class WorkoutViewModel @Inject constructor(
                 "entries" to kotlinx.serialization.json.JsonArray(result.entries),
             )
             prefs.save(a)
+            refreshHistory() // 🆕 P9 T4：参考线历史缓存（新会话开场刷一次）
             active = a
             highWater.clear()
             publishActive()
@@ -540,6 +563,7 @@ class WorkoutViewModel @Inject constructor(
             editingWorkoutId = workoutId
             lastUndo = null
             highWater.clear()
+            refreshHistory() // 🆕 P9 T4：编辑态刷缓存（refreshHistory 内已剔除被编辑条目自身）
             publishActive()
         }
     }
@@ -610,6 +634,31 @@ class WorkoutViewModel @Inject constructor(
         active = upd
         prefs.save(upd)
         publishActive()
+    }
+
+    /**
+     * 🆕 P9 批 T3 · 折叠已完成开关（Workout.jsx L1353-1355 菜单项 → A.collapseCompleted 翻转）：
+     * `s.active.collapseCompleted = !collapseOn` 同款写档（Js.with + prefs.save + publishActive，
+     * setLayout 同管线）；存档字段随档持久化，publishActive 读出随 state 发布。
+     */
+    fun toggleCollapse() {
+        val a = active ?: return
+        val cur = a.bool("collapseCompleted") ?: false
+        val upd = Js.with(a, "collapseCompleted", JsonPrimitive(!cur))
+        active = upd
+        prefs.save(upd)
+        publishActive()
+    }
+
+    /** 🆕 P9 批 T4 · 历史缓存刷新：Room 全量 → 剔除编辑中条目 → start 升序 → raw 解析。 */
+    private suspend fun refreshHistory() {
+        val eid = editingWorkoutId
+        historyCache = workoutDao.getAll()
+            .filter { eid == null || it.id != eid }
+            .sortedBy { it.start }
+            .mapNotNull { e ->
+                runCatching { Json.parseToJsonElement(e.raw) as? JsonObject }.getOrNull()
+            }
     }
 
     // ── 休息计时 ──────────────────────────────────────────────────────
@@ -708,7 +757,41 @@ class WorkoutViewModel @Inject constructor(
         val done = History.setsDoneActive(a)
         val cur = (a["cur"] as? JsonPrimitive)?.intOrNull ?: 0
         val view = a.str("workoutView") ?: "list"
-        _state.value = UiState.Active(a, entries, cur, done, total, entries.getOrNull(cur)?.str("name"), view)
+        // 🆕 P9 批 T3：折叠开关随档读出（JS `A.collapseCompleted ?? S.collapseCompleted`，
+        //   Android 无 S 级全局设置档，仅 A 级存档字段）
+        val collapseOn = a.bool("collapseCompleted") ?: false
+        // 🆕 P9 批 T4：组行参考面（Workout.jsx refLine L238-249 的 `last = lastEntryFor(H, entry.id, entry.rid)`）：
+        //   H = sessionHistory 对位——只取会话日之前的会话（补记过去日期时未来会话不作参考），
+        //   historyCache 已按 start 升序，lastEntryFor 倒序扫 = 最新优先
+        val sessionDay = a.str("d")
+        val hist = if (sessionDay == null) historyCache
+        else historyCache.filter { (it.str("d") ?: "") < sessionDay }
+        val H = Js.obj("workouts" to kotlinx.serialization.json.JsonArray(hist))
+        val refs = entries.map { refSetsFor(H, it) }
+        _state.value = UiState.Active(
+            a, entries, cur, done, total, entries.getOrNull(cur)?.str("name"), view,
+            collapseCompleted = collapseOn,
+            refs = refs,
+        )
+    }
+
+    /**
+     * 🆕 P9 批 T4 · 单动作参考值（Workout.jsx refLine MVP）：上次会话同位置完成组的 w×r 列表。
+     *
+     * lastEntryFor 返回的 sets = 已完成非热身组（history.js lastEntryIn L578-580 同滤），
+     * 即「工作组序」——热身组不占位，同位对齐的正是 PWA 参考线展示的那组数据。
+     * w 或 r 缺失的行不出参考（bodyweight 只记 r：无载重参考线是刻意的，PWA 该列为
+     * 「Added」列同一口径）；per-side 行读顶层聚合 w/r（PWA setLabel 同样按聚合展示，MVP 注记）。
+     */
+    private fun refSetsFor(H: JsonObject, entry: JsonObject): List<SetRef?> {
+        val exId = entry.str("id") ?: return emptyList()
+        val last = History.lastEntryFor(H, exId, entry.str("rid")) ?: return emptyList()
+        return (last.arr("sets") ?: emptyList()).mapNotNull { el ->
+            val s = el as? JsonObject ?: return@mapNotNull null
+            val w = s.num("w") ?: return@mapNotNull null
+            val r = (s.num("r") ?: s.num("reps")) ?: return@mapNotNull null
+            SetRef(w, r)
+        }
     }
 
     /** 下一个未完成动作的首个未完成组休息参考（supersetFlow 推进语义 MVP 版）。 */

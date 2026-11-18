@@ -69,6 +69,7 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
@@ -192,6 +193,29 @@ import kotlinx.serialization.json.doubleOrNull
  *
  * 批 5 之后迭代项：focus 布局、progressline/refLine、折叠 completed、pager 嵌套滚动协调。
  *
+ * 🆕 P9 批 A（Workout 屏 UX 三件套 · Workout.jsx 真源对照）：
+ *   ⑱ 折叠已完成（T3 · JS L960-967 + L1354）：Layout 菜单第四项「折叠已完成动作」带 Check 勾选态
+ *      （副行「保持当前动作展开」）→ VM 契约 toggleCollapse()（A.collapseCompleted 翻转存档）；
+ *      list/compact 视图（listMode）渲染过滤——全部组完成的动作折叠成摘要行（动作名 + N 组 ✓），
+ *      当前动作（cur）与最后一个有未完成组的动作不折叠（JS 'Keep the current exercise open'）；
+ *      摘要行点击展开（屏内局部 opened 记忆，JS openedState 按 index 键、条目数变化即重开），
+ *      已展开的完成动作尾部「收起」（JS reopened + Fold away chip 语义）
+ *   ⑲ refLine 上次参考线（T4 · JS L253 MVP 常显版）：组行上方小字「上次 80kg × 10」
+ *      （onSurfaceVariant labelSmall，无历史/无载重不出）；数据源 VM refs[entryIdx][setIdx]
+ *      （UiState.Active.refs，上次会话同位置完成工作组 w×r；dense=compact 视图按 JS 语义省略）
+ *   ⑳ 紧凑视图（T5 · JS ExerciseBlock dense L97/L106/L632-644）：Layout 菜单第四视图
+ *      「紧凑视图」→ workoutView="compact" → ListLayout(dense=true) 走 list 同代码路径（DRY）：
+ *      动作名 17sp（JS dense 字号）、块内边距 12→8、组行行高收紧（垂直 padding 2→1）、
+ *      分侧 +Drop 缩小、块间距 12→8；refLine/摘要区按 JS dense 语义省略
+ *
+ * ⚠️ VM 方法契约（P9 批 A 并行批次，编译验收主线统一）：
+ *   UiState.Active.collapseCompleted: Boolean（默认 false）/ UiState.Active.refs: List<List<SetRef?>>
+ *   toggleCollapse()
+ *
+ * 🆕 P9 批 A 追加键名清单（strings.xml 禁触，文件内 private const 承载，收口统一换 stringResource）：
+ *   workout_layout_compact workout_collapse_completed workout_collapse_sub
+ *   workout_collapse_fold workout_collapse_sets_suffix workout_ref_last
+ *
  * 🆕 批 3b 追加键名清单：
  *   workout_edit_last workout_backfill workout_backfill_chosen workout_backfill_clear
  *   workout_dp_confirm workout_dp_cancel
@@ -265,6 +289,7 @@ fun WorkoutScreen(
                     undoDeleteSet = vm::undoDeleteSet,     // 🆕 批 5：撤销删除/复制
                     setLayout = vm::setLayout,             // 🆕 批 5：布局切换 "list"/"cards"
                     setCur = vm::setCur,                   // 🆕 批 6：聚焦视图 prev/next 动作
+                    toggleCollapse = vm::toggleCollapse,   // 🆕 P9 T3：折叠已完成开关
                 ),
                 onPairWithPrev = vm::pairWithPrev,
                 onUnpair = vm::unpair,
@@ -412,6 +437,7 @@ private data class SetOps(
     val undoDeleteSet: () -> Unit,                // 🆕 批 5：撤销最近一次删除/复制
     val setLayout: (String) -> Unit,              // 🆕 批 5：布局切换（"list"/"cards"）
     val setCur: (Int) -> Unit,                    // 🆕 批 6：聚焦视图动作切换（FocusBranch prev/next）
+    val toggleCollapse: () -> Unit,               // 🆕 P9 T3：折叠已完成开关（A.collapseCompleted 翻转）
 )
 
 @Composable
@@ -465,8 +491,13 @@ private fun ActiveWorkout(
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
-                // 🆕 批 5 布局切换菜单（「完成」旁；当前态勾选）
-                LayoutMenu(workoutView = s.workoutView, onPick = ops.setLayout)
+                // 🆕 批 5 布局切换菜单（「完成」旁；当前态勾选）· P9 T3 折叠已完成第四项
+                LayoutMenu(
+                    workoutView = s.workoutView,
+                    collapseOn = s.collapseCompleted,
+                    onPick = ops.setLayout,
+                    onToggleCollapse = ops.toggleCollapse,
+                )
                 TextButton(onClick = onFinish) {
                     Text(
                         "完成",
@@ -495,6 +526,7 @@ private fun ActiveWorkout(
             }
         }
         // 🆕 批 5 布局分叉：workoutView 变化即重组（切换实时生效）
+        // 🆕 P9 T5：compact = ListLayout 的 dense 形态（JS listMode = list || compact 同代码路径，DRY）
         when (s.workoutView) {
             "cards" -> CardsLayout(
                 s = s,
@@ -508,24 +540,22 @@ private fun ActiveWorkout(
                 ops = ops,
                 onSwipeAction = { undoAction = it; undoTick++ },
             )
-            else -> {
-                // 动作块列表（list 视图全展开）
-                LazyColumn(Modifier.fillMaxSize().padding(horizontal = 16.dp)) {
-                    itemsIndexed(s.entries) { ei, entry ->
-                        ExerciseBlock(
-                            entry = entry as? JsonObject ?: JsonObject(emptyMap()),
-                            entryIdx = ei,
-                            highlighted = ei == s.cur,
-                            ops = ops,
-                            onPairWithPrev = onPairWithPrev,
-                            onUnpair = onUnpair,
-                            onSwipeAction = { undoAction = it; undoTick++ },
-                        )
-                        Spacer(Modifier.height(12.dp))
-                    }
-                    item { Spacer(Modifier.height(120.dp)) } // dock 避让
-                }
-            }
+            "compact" -> ListLayout(
+                s = s,
+                ops = ops,
+                dense = true,
+                onPairWithPrev = onPairWithPrev,
+                onUnpair = onUnpair,
+                onSwipeAction = { undoAction = it; undoTick++ },
+            )
+            else -> ListLayout(
+                s = s,
+                ops = ops,
+                dense = false,
+                onPairWithPrev = onPairWithPrev,
+                onUnpair = onUnpair,
+                onSwipeAction = { undoAction = it; undoTick++ },
+            )
         }
         // Discard 次级动作（确认批 3，MVP 直删）
         Row(Modifier.fillMaxWidth().padding(horizontal = 16.dp), horizontalArrangement = Arrangement.End) {
@@ -552,6 +582,114 @@ private fun ActiveWorkout(
     }
 }
 
+// ── ListLayout（list / compact 共用 · P9 T3 折叠已完成 + T5 紧凑视图） ─────────────
+
+/** 动作单元是否全部组完成（T3 · JS finished L966：sets 非空且所有 done 均 jsTruthy；空 sets = 未完成不折叠）。 */
+private fun entryAllDone(entry: JsonObject): Boolean {
+    val sets = entry.arr("sets") ?: return false
+    if (sets.isEmpty()) return false
+    return sets.all { jsTruthy((it as? JsonObject)?.get("done")) }
+}
+
+/**
+ * 列表布局（T5：list 与 compact 走同一代码路径，dense 只收窄字号/间距——JS listMode
+ * `workoutView === 'list' || 'compact'` L946-948 语义）。
+ *
+ * T3 折叠已完成（JS L955-969 + L1953-1958）：collapseCompleted 开启时，全部组完成的动作
+ * 折成摘要行（动作名 + N 组 ✓）；当前动作（cur，JS `!u.includes(cur)`）与最后一个有未完成组
+ * 的动作（'Keep the current exercise open'）不折叠；摘要行点击展开 = 屏内局部 opened 记忆
+ * （JS openedState 按 index 键、条目数变化即重开），已展开的完成动作尾部「收起」。
+ */
+@Composable
+private fun ListLayout(
+    s: WorkoutViewModel.UiState.Active,
+    ops: SetOps,
+    dense: Boolean,
+    onPairWithPrev: (Int) -> Unit,
+    onUnpair: (Int) -> Unit,
+    onSwipeAction: (String) -> Unit,
+) {
+    val entries = s.entries
+    val collapseOn = s.collapseCompleted
+    val keepIdx = entries.indexOfLast { e -> !entryAllDone(e as? JsonObject ?: JsonObject(emptyMap())) }
+    // 屏内局部展开记忆（JS openedState L964）：Pair(条目数, 展开 index 集)；条目数变化即重开
+    var openedState by remember { mutableStateOf(Pair(-1, emptySet<Int>())) }
+    val opened: Set<Int> = if (openedState.first == entries.size) openedState.second else emptySet()
+    LazyColumn(Modifier.fillMaxSize().padding(horizontal = 16.dp)) {
+        itemsIndexed(entries) { ei, entry ->
+            val e = entry as? JsonObject ?: JsonObject(emptyMap())
+            val collapsed = collapseOn && entryAllDone(e) && ei != s.cur && ei != keepIdx && ei !in opened
+            if (collapsed) {
+                CollapsedSummary(
+                    name = e["name"]?.toString()?.trim('"') ?: "动作",
+                    setCount = (e.arr("sets") ?: emptyList()).size,
+                    onOpen = { openedState = Pair(entries.size, opened + ei) },
+                )
+            } else {
+                ExerciseBlock(
+                    entry = e,
+                    entryIdx = ei,
+                    highlighted = ei == s.cur,
+                    dense = dense,
+                    refs = s.refs.getOrNull(ei) ?: emptyList(),
+                    ops = ops,
+                    onPairWithPrev = onPairWithPrev,
+                    onUnpair = onUnpair,
+                    onSwipeAction = onSwipeAction,
+                )
+                // 已完成且被手动展开：尾行「收起」（JS reopened + Fold away chip L1943 语义）
+                if (collapseOn && entryAllDone(e) && ei in opened) {
+                    TextButton(onClick = { openedState = Pair(entries.size, opened - ei) }) {
+                        Text(
+                            stringResource(R.string.workout_collapse_fold),
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
+                }
+            }
+            Spacer(Modifier.height(if (dense) 8.dp else 12.dp))
+        }
+        item { Spacer(Modifier.height(120.dp)) } // dock 避让
+    }
+}
+
+/** 折叠摘要行（T3 · JS wl-summary L1953-1958）：动作名 + 完成组数 ✓，点击展开组行。 */
+@Composable
+private fun CollapsedSummary(
+    name: String,
+    setCount: Int,
+    onOpen: () -> Unit,
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(8.dp))
+            .clickable(onClick = onOpen)
+            .padding(horizontal = 4.dp, vertical = 8.dp),
+    ) {
+        Text(
+            name,
+            style = MaterialTheme.typography.bodyMedium,
+            fontWeight = FontWeight.SemiBold,
+            modifier = Modifier.weight(1f),
+        )
+        Icon(
+            Icons.Filled.Check,
+            contentDescription = null,
+            modifier = Modifier.size(14.dp),
+            tint = MaterialTheme.colorScheme.primary,
+        )
+        Spacer(Modifier.width(4.dp))
+        Text(
+            "$setCount" + stringResource(R.string.workout_collapse_sets_suffix),
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.primary,
+        )
+    }
+}
+
 // ── ExerciseBlock（动作块 + 组行） ──────────────────────────────────
 
 @Composable
@@ -564,6 +702,8 @@ private fun ExerciseBlock(
     onUnpair: (Int) -> Unit,
     onSwipeAction: (String) -> Unit,   // 🆕 批 5：SetRow 滑动结果上报（"copied"/"deleted"）
     modifier: Modifier = Modifier,     // 🆕 批 5：cards 布局页内尺寸
+    dense: Boolean = false,            // 🆕 P9 T5：紧凑形态（JS dense L97/L106——收窄字号/间距，不删功能）
+    refs: List<WorkoutViewModel.SetRef?> = emptyList(), // 🆕 P9 T4：组行参考（refs[setIdx] = 上次同位组）
 ) {
     val name = entry["name"]?.toString()?.trim('"') ?: "动作"
     val sets = entry.arr("sets") ?: emptyList()
@@ -578,11 +718,13 @@ private fun ExerciseBlock(
             else MaterialTheme.colorScheme.surfaceContainer,
         ),
     ) {
-        Column(Modifier.padding(12.dp)) {
+        Column(Modifier.padding(if (dense) 8.dp else 12.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     name,
-                    style = MaterialTheme.typography.titleMedium,
+                    // 🆕 P9 T5：dense 动作名 17sp（JS L635 fontSize (compact||dense) ? 17 : 20 的 Android 版）
+                    style = if (dense) MaterialTheme.typography.titleMedium.copy(fontSize = 17.sp)
+                    else MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold,
                     modifier = Modifier.weight(1f),
                 )
@@ -621,9 +763,20 @@ private fun ExerciseBlock(
                     }
                 }
             }
-            Spacer(Modifier.height(6.dp))
+            Spacer(Modifier.height(if (dense) 2.dp else 6.dp))
             sets.forEachIndexed { si, setEl ->
                 val set = setEl as? JsonObject ?: return@forEachIndexed
+                // 🆕 P9 T4 refLine（JS L253 MVP 常显版）：组行上方小字「上次 80kg × 10」；
+                //   dense（紧凑视图）按 JS dense 语义省略参考线（L97-99「drops the 'last time' recap」）
+                val ref = refs.getOrNull(si)
+                if (!dense && ref != null) {
+                    Text(
+                        stringResource(R.string.workout_ref_last) + " " + workoutfmt.num(ref.w) + "kg × " + workoutfmt.num(ref.r),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(start = 36.dp),
+                    )
+                }
                 // 🆕 批 5 SwipeRow：组行滑动手势（右滑复制/左滑删除，list 与 cards 共用）
                 SwipeRow(
                     entryIdx = entryIdx,
@@ -637,6 +790,7 @@ private fun ExerciseBlock(
                         label = "${si + 1}",
                         set = set,
                         ops = ops,
+                        dense = dense,
                     )
                 }
             }
@@ -662,6 +816,7 @@ private fun SetRow(
     label: String,
     set: JsonObject,
     ops: SetOps,
+    dense: Boolean = false, // 🆕 P9 T5：紧凑形态（行高收紧 · JS dense 组行密排语义）
 ) {
     val warmup = WorkoutModel.isWarmupRow(set)
     val failure = set.bool("failure") == true
@@ -672,7 +827,7 @@ private fun SetRow(
     val drops = set.arr("drops")?.mapNotNull { it as? JsonObject } ?: emptyList()
     val clusters = set.arr("clusters")?.mapNotNull { it as? JsonObject } ?: emptyList()
 
-    Column(Modifier.fillMaxWidth().padding(vertical = 2.dp)) {
+    Column(Modifier.fillMaxWidth().padding(vertical = if (dense) 1.dp else 2.dp)) {
         if (sides != null) {
             // per-side：主行只留序号钮（stepper/done 隐藏，stepper 批 4），下方 L/R 两行
             Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
@@ -704,12 +859,13 @@ private fun SetRow(
                 }
             }
             // 🆕 批 4 侧内 +Drop（引擎 addSideDrop 两侧对称加，按钮一处免双加）
+            // 🆕 P9 T5：dense 缩小 chips（JS L632-644 dense 省非录组面 + chips 缩小的 Android 对位）
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(start = 36.dp, top = 1.dp),
+                modifier = Modifier.padding(start = 36.dp, top = if (dense) 0.dp else 1.dp),
             ) {
                 TextButton(onClick = { ops.addDrop(entryIdx, setIdx) }) {
-                    Text("+Drop", style = MaterialTheme.typography.labelMedium)
+                    Text("+Drop", style = if (dense) MaterialTheme.typography.labelSmall else MaterialTheme.typography.labelMedium)
                 }
             }
         } else {
@@ -998,12 +1154,19 @@ private fun BwDialog(onConfirm: (Double) -> Unit) {
     )
 }
 
-/** 布局切换菜单（批 5 ⑬）：header「完成」旁「布局」TextButton → DropdownMenu（列表/卡片
- *  两档），当前态 trailingIcon Check 勾选；onPick 直通 VM setLayout。 */
+/**
+ * 布局切换菜单（批 5 ⑬ · P9 T3/T5 扩）：header「完成」旁「布局」TextButton → DropdownMenu
+ * （列表/卡片/紧凑/聚焦四视图 + 折叠已完成开关），当前态 trailingIcon Check 勾选；
+ * onPick 直通 VM setLayout，onToggleCollapse 直通 VM toggleCollapse。
+ * 折叠项仅在 listMode（list/compact）显示（JS L1353 `listMode && {...}` 条目条件），
+ * 副行「保持当前动作展开」= JS sub 'Keep the current exercise open' L1354。
+ */
 @Composable
 private fun LayoutMenu(
     workoutView: String,
+    collapseOn: Boolean,
     onPick: (String) -> Unit,
+    onToggleCollapse: () -> Unit,
 ) {
     var open by remember { mutableStateOf(false) }
     Box {
@@ -1014,7 +1177,7 @@ private fun LayoutMenu(
             DropdownMenuItem(
                 text = { Text("列表视图") },
                 trailingIcon = {
-                    if (workoutView != "cards") Icon(Icons.Filled.Check, contentDescription = null, Modifier.size(16.dp))
+                    if (workoutView == "list") Icon(Icons.Filled.Check, contentDescription = null, Modifier.size(16.dp))
                 },
                 onClick = { open = false; onPick("list") },
             )
@@ -1025,6 +1188,14 @@ private fun LayoutMenu(
                 },
                 onClick = { open = false; onPick("cards") },
             )
+            // 🆕 P9 T5：紧凑视图（第四视图 · JS L1351 compact；workoutView="compact" → ListLayout dense）
+            DropdownMenuItem(
+                text = { Text(stringResource(R.string.workout_layout_compact)) },
+                trailingIcon = {
+                    if (workoutView == "compact") Icon(Icons.Filled.Check, contentDescription = null, Modifier.size(16.dp))
+                },
+                onClick = { open = false; onPick("compact") },
+            )
             DropdownMenuItem(
                 text = { Text("聚焦视图") },
                 trailingIcon = {
@@ -1032,6 +1203,25 @@ private fun LayoutMenu(
                 },
                 onClick = { open = false; onPick("focus") },
             )
+            // 🆕 P9 T3：折叠已完成开关（JS L1353-1355——toggle 语义，非视图切换）
+            if (workoutView == "list" || workoutView == "compact") {
+                DropdownMenuItem(
+                    text = {
+                        Column {
+                            Text(stringResource(R.string.workout_collapse_completed))
+                            Text(
+                                stringResource(R.string.workout_collapse_sub),
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            )
+                        }
+                    },
+                    trailingIcon = {
+                        if (collapseOn) Icon(Icons.Filled.Check, contentDescription = null, Modifier.size(16.dp))
+                    },
+                    onClick = { open = false; onToggleCollapse() },
+                )
+            }
         }
     }
 }
@@ -1106,6 +1296,7 @@ private fun CardsLayout(
                     onUnpair = onUnpair,
                     onSwipeAction = onSwipeAction,
                     modifier = Modifier.fillMaxWidth(),
+                    refs = s.refs.getOrNull(page) ?: emptyList(), // 🆕 P9 T4：卡片页同样带参考线
                 )
             }
             // 页间圆点 indicator
@@ -1265,3 +1456,6 @@ private fun SummaryTile(label: String, value: String) {
         }
     }
 }
+
+// ── P9 批 A 新增文案（strings.xml 禁触：文件内 private const 承载，收口统一换 stringResource；
+//    键名清单见文件头——中文照抄 / 英文直译）────────────────────────────────

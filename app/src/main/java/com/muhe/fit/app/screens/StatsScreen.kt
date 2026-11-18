@@ -48,7 +48,13 @@ import java.time.format.DateTimeFormatter
  * 聚合在 StatsCalc 纯函数 + StatsViewModel（Room 只读），图表 Canvas/Grid 自绘零新依赖。
  * BodyMap 三视图（肌平衡/疲劳/力量）本批占位卡——人体 SVG 移植随 M2 后段批次。
  * Screen+Body 拆分保 @Preview（CoachScreen/LoginScreen 同纪律）。
+ *
+ * 双语键清单（P9 批 B 收口时落 strings.xml / values-en，本批 strings 禁触以文件常量承载，
+ * LibraryScreen V1.4 先例）：`stats_tile_streak_weeks` = 「连续周数」 / "Week streak"
+ * （JS 真源 Stats.jsx:642 文案即 t('Week streak')）；现有 stats_tile_streak（「连续天数」）
+ * 因瓦片换周口径（lib/Streak.kt）暂无消费方，键保留不删（不碰现有键纪律）。
  */
+
 @Composable
 fun StatsScreen(
     onGoHome: () -> Unit = {},
@@ -94,7 +100,7 @@ private fun ContentBody(state: StatsUiState, modifier: Modifier = Modifier) {
             color = MaterialTheme.muheExtended.textTertiary,
         )
 
-        // ① 汇总瓦片（Stats.jsx tiles：总训练/本月/连续/30天体重变化）
+        // ① 汇总瓦片（Stats.jsx tiles：总训练/本月/连续周/30天体重变化）
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             StatTile(
                 label = stringResource(R.string.stats_tile_workouts),
@@ -107,8 +113,9 @@ private fun ContentBody(state: StatsUiState, modifier: Modifier = Modifier) {
                 modifier = Modifier.weight(1f),
             )
             StatTile(
-                label = stringResource(R.string.stats_tile_streak),
-                value = state.streakDays.toString(),
+                // P9 批 B：瓦片换周口径（streakWeeks），label 暂文件常量（键清单见头注）
+                label = stringResource(R.string.stats_tile_streak_weeks),
+                value = state.streakWeeks.toString(),
                 modifier = Modifier.weight(1f),
             )
             StatTile(
@@ -513,7 +520,7 @@ private fun StatsScreenPreview() {
                 hasWorkouts = true,
                 totalWorkouts = 42,
                 monthWorkouts = 11,
-                streakDays = 3,
+                streakWeeks = 5,
                 bwDelta = "-0.8",
                 heatColumns = columns,
                 weekRows = StatsCalc.weeklySetTotals(tally, today, weeks = 4),

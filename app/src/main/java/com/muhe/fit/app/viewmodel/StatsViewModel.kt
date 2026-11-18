@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.muhe.fit.app.data.MuheDatabase
 import com.muhe.fit.app.lib.StatsCalc
 import com.muhe.fit.app.lib.StatsCalc.BwPoint
+import com.muhe.fit.app.lib.Streak
 import com.muhe.fit.app.sync.SyncStateBus
 import com.muhe.fit.app.sync.SyncUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -28,7 +29,12 @@ data class StatsUiState(
     val hasWorkouts: Boolean,
     val totalWorkouts: Int,
     val monthWorkouts: Int,
-    val streakDays: Int,
+    /**
+     * 连续训练周数（P9 批 B：瓦片换周口径，JS streakWeeks 移植见 lib/Streak.kt；
+     * 原日口径 StatsCalc.dayStreak 函数保留，「我的」页仍用日口径——两页口径差异
+     * 注记在 ProfileViewModel）
+     */
+    val streakWeeks: Int,
     /** 30 天体重变化（已带符号 formatted，null = 窗内不足两点） */
     val bwDelta: String?,
     /** 热图格子：列 = 周（旧→新）× 行 = 周一..周日 */
@@ -84,7 +90,7 @@ class StatsViewModel @Inject constructor(
                 hasWorkouts = workouts.isNotEmpty(),
                 totalWorkouts = workouts.size,
                 monthWorkouts = StatsCalc.monthWorkoutCount(tally.keys, today),
-                streakDays = StatsCalc.dayStreak(tally.keys, today),
+                streakWeeks = Streak.streakWeeks(workouts, today),
                 bwDelta = StatsCalc.bwDelta30(bw, today)?.let(StatsCalc::fmtSigned),
                 heatColumns = StatsCalc.heatGrid(tally, today, HEAT_WEEKS),
                 weekRows = weekRows,

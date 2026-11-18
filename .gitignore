@@ -9,3 +9,7 @@ local.properties
 # IDE
 .idea/
 *.iml
+
+# 签名密钥（P9 T2）：keystore 与口令文件永不入库（storeFile 路径相对 app/ 模块目录）
+keystore/
+keystore.properties
