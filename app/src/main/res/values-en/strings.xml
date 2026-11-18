@@ -238,6 +238,9 @@
     <string name="workout_collapse_fold">Fold away</string>
     <string name="workout_collapse_sets_suffix"> sets</string>
     <string name="workout_ref_last">Last time</string>
+    <string name="workout_add_exercise">＋ Add exercise</string>
+    <string name="workout_pick_search">Search exercises</string>
+    <string name="workout_pick_empty">No matching exercises</string>
 
     <!-- P9: Stats tile streak weekly口径 (JS Stats.jsx:642 "Week streak") -->
     <string name="stats_tile_streak_weeks">Week streak</string>

@@ -240,6 +240,9 @@
     <string name="workout_collapse_fold">收起</string>
     <string name="workout_collapse_sets_suffix"> 组</string>
     <string name="workout_ref_last">上次</string>
+    <string name="workout_add_exercise">＋ 添加动作</string>
+    <string name="workout_pick_search">搜索动作</string>
+    <string name="workout_pick_empty">没有匹配的动作</string>
 
     <!-- P9 · 统计瓦片 streak 周口径（JS Stats.jsx:642 "Week streak"） -->
     <string name="stats_tile_streak_weeks">连续周数</string>

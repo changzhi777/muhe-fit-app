@@ -38,6 +38,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
@@ -259,6 +260,16 @@ fun WorkoutScreen(
         )
     }
 
+    // 🆕 P9.5 添加动作选择器（自由练闭环）：ActiveWorkout 列表尾按钮触发，Sheet 选目录动作
+    var showPicker by remember { mutableStateOf(false) }
+    if (showPicker && state is WorkoutViewModel.UiState.Active) {
+        ExercisePickerSheet(
+            onDismiss = { showPicker = false },
+            onPick = { id, name -> vm.addExercise(id, name); showPicker = false },
+            query = vm::searchExercises,
+        )
+    }
+
     Box(Modifier.fillMaxSize()) {
         when (val s = state) {
             is WorkoutViewModel.UiState.Idle -> StartChooser(
@@ -290,11 +301,13 @@ fun WorkoutScreen(
                     setLayout = vm::setLayout,             // 🆕 批 5：布局切换 "list"/"cards"
                     setCur = vm::setCur,                   // 🆕 批 6：聚焦视图 prev/next 动作
                     toggleCollapse = vm::toggleCollapse,   // 🆕 P9 T3：折叠已完成开关
+                    addExercise = vm::addExercise,           // 🆕 P9.5：自由练添加动作
                 ),
                 onPairWithPrev = vm::pairWithPrev,
                 onUnpair = vm::unpair,
                 onFinish = vm::finishWorkout,
                 onDiscard = vm::discardWorkout,
+                onAddExercise = { showPicker = true },
             )
             is WorkoutViewModel.UiState.Done -> FinishSummary(s, onDone = {
                 vm.acknowledgeSummary()
@@ -438,6 +451,7 @@ private data class SetOps(
     val setLayout: (String) -> Unit,              // 🆕 批 5：布局切换（"list"/"cards"）
     val setCur: (Int) -> Unit,                    // 🆕 批 6：聚焦视图动作切换（FocusBranch prev/next）
     val toggleCollapse: () -> Unit,               // 🆕 P9 T3：折叠已完成开关（A.collapseCompleted 翻转）
+    val addExercise: (String, String) -> Unit,    // 🆕 P9.5：自由练添加动作（exId, exName）
 )
 
 @Composable
@@ -448,6 +462,7 @@ private fun ActiveWorkout(
     onUnpair: (Int) -> Unit,
     onFinish: () -> Unit,
     onDiscard: () -> Unit,
+    onAddExercise: () -> Unit,
 ) {
     // 编辑模式标识（批 3b）：editingWorkoutId 非空 = 正在编辑已存会话
     val editing = (s.active["editingWorkoutId"] as? JsonPrimitive)?.contentOrNull != null
@@ -534,6 +549,7 @@ private fun ActiveWorkout(
                 onPairWithPrev = onPairWithPrev,
                 onUnpair = onUnpair,
                 onSwipeAction = { undoAction = it; undoTick++ },
+                onAddExercise = onAddExercise,
             )
             "focus" -> FocusBranch(
                 s = s,
@@ -547,6 +563,7 @@ private fun ActiveWorkout(
                 onPairWithPrev = onPairWithPrev,
                 onUnpair = onUnpair,
                 onSwipeAction = { undoAction = it; undoTick++ },
+                onAddExercise = onAddExercise,
             )
             else -> ListLayout(
                 s = s,
@@ -555,6 +572,7 @@ private fun ActiveWorkout(
                 onPairWithPrev = onPairWithPrev,
                 onUnpair = onUnpair,
                 onSwipeAction = { undoAction = it; undoTick++ },
+                onAddExercise = onAddExercise,
             )
         }
         // Discard 次级动作（确认批 3，MVP 直删）
@@ -608,6 +626,7 @@ private fun ListLayout(
     onPairWithPrev: (Int) -> Unit,
     onUnpair: (Int) -> Unit,
     onSwipeAction: (String) -> Unit,
+    onAddExercise: () -> Unit,
 ) {
     val entries = s.entries
     val collapseOn = s.collapseCompleted
@@ -649,6 +668,11 @@ private fun ListLayout(
                 }
             }
             Spacer(Modifier.height(if (dense) 8.dp else 12.dp))
+        }
+        item {
+            OutlinedButton(onClick = onAddExercise, modifier = Modifier.fillMaxWidth()) {
+                Text(stringResource(R.string.workout_add_exercise))
+            }
         }
         item { Spacer(Modifier.height(120.dp)) } // dock 避让
     }
@@ -1270,6 +1294,7 @@ private fun CardsLayout(
     onPairWithPrev: (Int) -> Unit,
     onUnpair: (Int) -> Unit,
     onSwipeAction: (String) -> Unit,
+    onAddExercise: () -> Unit,
 ) {
     val pagerState = rememberPagerState(pageCount = { s.entries.size })
     val scope = rememberCoroutineScope()
@@ -1336,6 +1361,9 @@ private fun CardsLayout(
                     enabled = pagerState.currentPage < s.entries.size - 1,
                     modifier = Modifier.weight(1f),
                 ) { Text("下一动作") }
+            }
+            OutlinedButton(onClick = onAddExercise, modifier = Modifier.fillMaxWidth()) {
+                Text(stringResource(R.string.workout_add_exercise))
             }
         }
         Spacer(Modifier.height(120.dp)) // dock 避让
@@ -1459,3 +1487,60 @@ private fun SummaryTile(label: String, value: String) {
 
 // ── P9 批 A 新增文案（strings.xml 禁触：文件内 private const 承载，收口统一换 stringResource；
 //    键名清单见文件头——中文照抄 / 英文直译）────────────────────────────────
+
+
+// ── P9.5 添加动作选择器（自由练闭环）：ModalBottomSheet + 目录检索列表 ──────────────
+// 数据面走 vm::searchExercises（ExercisesRepo 内存检索，q 空取前 60 条）；
+// 文案 strings：workout_add_exercise / workout_pick_search / workout_pick_empty。
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun ExercisePickerSheet(
+    onDismiss: () -> Unit,
+    onPick: (String, String) -> Unit,
+    query: (String) -> List<WorkoutViewModel.ExercisePick>,
+) {
+    var q by remember { mutableStateOf("") }
+    val rows = remember(q) { query(q) }
+    ModalBottomSheet(onDismissRequest = onDismiss) {
+        OutlinedTextField(
+            value = q,
+            onValueChange = { q = it },
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+            placeholder = { Text(stringResource(R.string.workout_pick_search)) },
+            singleLine = true,
+        )
+        Spacer(Modifier.height(8.dp))
+        LazyColumn(Modifier.fillMaxWidth().height(420.dp)) {
+            itemsIndexed(rows) { _, r ->
+                Column(
+                    Modifier
+                        .fillMaxWidth()
+                        .clickable { onPick(r.id, r.name) }
+                        .padding(horizontal = 16.dp, vertical = 10.dp),
+                ) {
+                    Text(r.name, style = MaterialTheme.typography.bodyLarge)
+                    if (r.nameEn.isNotBlank()) {
+                        Text(
+                            r.nameEn,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
+                }
+                HorizontalDivider()
+            }
+            if (rows.isEmpty()) {
+                item {
+                    Text(
+                        stringResource(R.string.workout_pick_empty),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(16.dp),
+                    )
+                }
+            }
+            item { Spacer(Modifier.height(24.dp)) }
+        }
+    }
+}

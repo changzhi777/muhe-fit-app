@@ -2,6 +2,7 @@ package com.muhe.fit.app.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.muhe.fit.app.data.ExercisesRepo
 import com.muhe.fit.app.data.WorkoutSessionPrefs
 import com.muhe.fit.app.data.dao.RoutineDao
 import com.muhe.fit.app.data.dao.WorkoutDao
@@ -70,6 +71,7 @@ class WorkoutViewModel @Inject constructor(
     private val workoutDao: WorkoutDao,
     private val meta: SyncMetaStore,
     private val syncScheduler: SyncScheduler,
+    private val exercisesRepo: ExercisesRepo,
 ) : ViewModel() {
 
     /** StartChooser 选项（Idle 态列表）：routine raw + 动作数。 */
@@ -181,9 +183,10 @@ class WorkoutViewModel @Inject constructor(
                         Json.parseToJsonElement(e.raw) as? JsonObject
                     }.getOrNull()
                     if (parsed != null) {
-                        active = parsed
+                        val merged = mergeEditPrefs(parsed)
+                        active = merged
                         editingWorkoutId = id
-                        prefs.save(parsed)
+                        prefs.save(merged)
                         highWater.clear()
                         refreshHistory() // 🆕 P9 T4：编辑入口同刷缓存（剔除被编辑条目自身）
                         publishActive()
@@ -650,6 +653,21 @@ class WorkoutViewModel @Inject constructor(
         publishActive()
     }
 
+    /**
+     * 🩹 P9.6 编辑档载入的 UI 偏好合并：编辑档快照带旧 workoutView/collapseCompleted，
+     * 直接覆盖 prefs 会把用户布局偏好打回旧值（真机发现冷启动回滚）——偏好跟人走，
+     * 从被覆盖前的 prefs 现档读出补回编辑档（现档无键则删，走默认 list/false）。
+     */
+    private fun mergeEditPrefs(parsed: JsonObject): JsonObject {
+        val p = prefs.load() ?: return parsed
+        val view = p.str("workoutView")
+        val collapse = p.bool("collapseCompleted")
+        return Js.with(
+            Js.with(parsed, "workoutView", view?.let { JsonPrimitive(it) }),
+            "collapseCompleted", collapse?.let { JsonPrimitive(it) },
+        )
+    }
+
     /** 🆕 P9 批 T4 · 历史缓存刷新：Room 全量 → 剔除编辑中条目 → start 升序 → raw 解析。 */
     private suspend fun refreshHistory() {
         val eid = editingWorkoutId
@@ -659,6 +677,38 @@ class WorkoutViewModel @Inject constructor(
             .mapNotNull { e ->
                 runCatching { Json.parseToJsonElement(e.raw) as? JsonObject }.getOrNull()
             }
+    }
+
+    /** 动作选择行（P9.5 选择器面）：目录条目的 id + 中文名。 */
+    data class ExercisePick(val id: String, val name: String, val nameEn: String)
+
+    /** 目录检索（选择器数据面）：q 空取前 60 条，否则 ExercisesRepo.search 截 60。 */
+    fun searchExercises(q: String): List<ExercisePick> {
+        val rows = if (q.isBlank()) exercisesRepo.all() else exercisesRepo.search(q)
+        return rows.take(60).map { ExercisePick(it.id, it.name, it.nameEn) }
+    }
+
+    /**
+     * 🆕 P9.5 自由练添加动作（JS Workout.jsx:1370 addExercise 的 MVP 子集）：entry =
+     * {id: exId, name, sets: 3×{w:0,r:0}}（JS full={...cfg, id: ex.id} 的 freestyle 无计划
+     * 形态）；「照上次构建组」的 buildSets/freestyleConfig 种子管线不移植，组重量次数走
+     * 既有 stepper 手输（注记后续批）；per-side 动作先落普通组形状，SideRow 分侧渲染按
+     * set.sides 缺席自动降级普通行。append 到 entries 尾部并把 cur 定位过去
+     * （JS 插在当前单元后，MVP 简化尾部）。
+     */
+    fun addExercise(exId: String, exName: String) {
+        val a = active ?: return
+        val sets = List(3) { Js.obj("w" to jn(0.0), "r" to jn(0.0)) }
+        val entry = Js.obj(
+            "id" to kotlinx.serialization.json.JsonPrimitive(exId),
+            "name" to kotlinx.serialization.json.JsonPrimitive(exName),
+            "sets" to kotlinx.serialization.json.JsonArray(sets),
+        )
+        val upd = Js.with(a, "entries", kotlinx.serialization.json.JsonArray(currentEntries(a) + entry))
+        val withCur = Js.with(upd, "cur", jn(currentEntries(upd).size - 1))
+        active = withCur
+        prefs.save(withCur)
+        publishActive()
     }
 
     // ── 休息计时 ──────────────────────────────────────────────────────
