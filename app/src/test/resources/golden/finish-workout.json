@@ -1,0 +1,2062 @@
+{
+  "module": "finish-workout",
+  "source": "ck/frontend/src/lib/finish-workout.js",
+  "generatedBy": "ck/scripts/export-golden-fixtures.mjs",
+  "tolerance": 0.000001,
+  "constants": {
+    "FORGOTTEN_GAP_MS": 1200000
+  },
+  "catalog": {
+    "0025": {
+      "eq": "barbell",
+      "bp": "chest",
+      "n": "barbell bench press",
+      "assisted": false
+    }
+  },
+  "functions": [
+    {
+      "fn": "sessionEnd",
+      "cases": [
+        {
+          "args": [
+            {
+              "entries": [
+                {
+                  "id": "x",
+                  "sets": [
+                    {
+                      "done": true,
+                      "w": 50,
+                      "r": 8,
+                      "at": 1000000000000
+                    },
+                    {
+                      "done": true,
+                      "w": 50,
+                      "r": 8,
+                      "at": 1000000900000
+                    },
+                    {
+                      "done": true,
+                      "w": 50,
+                      "r": 8,
+                      "at": 1000001800000
+                    },
+                    {
+                      "done": true,
+                      "w": 50,
+                      "r": 8,
+                      "at": 1000002700000
+                    }
+                  ]
+                }
+              ]
+            },
+            1000003000000
+          ],
+          "expected": 1000003000000
+        },
+        {
+          "args": [
+            {
+              "entries": [
+                {
+                  "id": "x",
+                  "sets": [
+                    {
+                      "done": true,
+                      "w": 50,
+                      "r": 8,
+                      "at": 1000000000000
+                    },
+                    {
+                      "done": true,
+                      "w": 50,
+                      "r": 8,
+                      "at": 1000000900000
+                    },
+                    {
+                      "done": true,
+                      "w": 50,
+                      "r": 8,
+                      "at": 1000001800000
+                    },
+                    {
+                      "done": true,
+                      "w": 50,
+                      "r": 8,
+                      "at": 1000002700000
+                    }
+                  ]
+                }
+              ]
+            },
+            1000108000000
+          ],
+          "expected": 1000002700000
+        },
+        {
+          "args": [
+            {
+              "entries": [
+                {
+                  "id": "x",
+                  "sets": [
+                    {
+                      "done": true,
+                      "w": 50,
+                      "r": 8,
+                      "at": 1000000000000
+                    },
+                    {
+                      "done": true,
+                      "w": 50,
+                      "r": 8,
+                      "at": 1000000900000
+                    },
+                    {
+                      "done": true,
+                      "w": 50,
+                      "r": 8,
+                      "at": 1000001800000
+                    },
+                    {
+                      "done": true,
+                      "w": 50,
+                      "r": 8,
+                      "at": 1000002700000
+                    },
+                    {
+                      "done": true,
+                      "w": 50,
+                      "r": 8,
+                      "at": 1000086400000
+                    }
+                  ]
+                }
+              ]
+            },
+            1000086400001
+          ],
+          "expected": 1000002700000
+        },
+        {
+          "args": [
+            {
+              "entries": [
+                {
+                  "id": "x",
+                  "sets": [
+                    {
+                      "done": true,
+                      "w": 50,
+                      "r": 8,
+                      "at": 1000000000000
+                    },
+                    {
+                      "done": false,
+                      "w": 50,
+                      "r": 8,
+                      "at": 1000001800000
+                    },
+                    {
+                      "done": true,
+                      "w": 50,
+                      "r": 8
+                    }
+                  ]
+                }
+              ]
+            },
+            1000018000000
+          ],
+          "expected": 1000000000000
+        },
+        {
+          "args": [
+            {
+              "entries": [
+                {
+                  "id": "x",
+                  "sets": [
+                    {
+                      "done": true,
+                      "w": 50,
+                      "r": 8
+                    }
+                  ]
+                }
+              ]
+            },
+            42
+          ],
+          "expected": 42
+        },
+        {
+          "args": [
+            {
+              "entries": [
+                {
+                  "id": "x",
+                  "sets": [
+                    {
+                      "done": true,
+                      "w": 50,
+                      "r": 8,
+                      "at": 1000000000000
+                    },
+                    {
+                      "done": true,
+                      "w": 50,
+                      "r": 8,
+                      "at": 1000001200000
+                    },
+                    {
+                      "done": true,
+                      "w": 50,
+                      "r": 8,
+                      "at": 1000002400000
+                    }
+                  ]
+                },
+                {
+                  "id": "run",
+                  "sets": [
+                    {
+                      "done": true,
+                      "min": 30,
+                      "speed": 10,
+                      "at": 1000004320000
+                    }
+                  ]
+                }
+              ]
+            },
+            1000004380000
+          ],
+          "expected": 1000004380000
+        },
+        {
+          "args": [
+            {
+              "entries": [
+                {
+                  "id": "x",
+                  "sets": [
+                    {
+                      "done": true,
+                      "w": 50,
+                      "r": 8,
+                      "at": 1000000000000
+                    },
+                    {
+                      "done": true,
+                      "w": 50,
+                      "r": 8,
+                      "at": 1000001200000
+                    },
+                    {
+                      "done": true,
+                      "w": 50,
+                      "r": 8,
+                      "at": 1000002400000
+                    }
+                  ]
+                },
+                {
+                  "id": "run",
+                  "sets": [
+                    {
+                      "done": true,
+                      "min": 30,
+                      "speed": 10,
+                      "at": 1000086400000
+                    }
+                  ]
+                }
+              ]
+            },
+            1000086400001
+          ],
+          "expected": 1000002400000
+        },
+        {
+          "args": [
+            {
+              "entries": [
+                {
+                  "id": "x",
+                  "sets": [
+                    {
+                      "done": true,
+                      "w": 50,
+                      "r": 8,
+                      "at": 1000000000000
+                    }
+                  ]
+                },
+                {
+                  "id": "plank",
+                  "sets": [
+                    {
+                      "done": true,
+                      "at": 1000001800000,
+                      "sides": {
+                        "L": {
+                          "sec": 330,
+                          "done": true
+                        },
+                        "R": {
+                          "sec": 330,
+                          "done": true
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            1000001860000
+          ],
+          "expected": 1000001860000
+        },
+        {
+          "args": [
+            {
+              "entries": [
+                {
+                  "id": "x",
+                  "sets": [
+                    {
+                      "done": true,
+                      "w": 50,
+                      "r": 8,
+                      "at": 1000000000000
+                    },
+                    {
+                      "done": true,
+                      "w": 50,
+                      "r": 8,
+                      "at": 1000001200000
+                    }
+                  ]
+                },
+                {
+                  "id": "run",
+                  "sets": [
+                    {
+                      "done": true,
+                      "min": 30,
+                      "speed": 10,
+                      "at": 1000001500000
+                    }
+                  ]
+                }
+              ]
+            },
+            1000003360000
+          ],
+          "expected": 1000003360000
+        },
+        {
+          "args": [
+            {
+              "entries": [
+                {
+                  "id": "x",
+                  "sets": [
+                    {
+                      "done": true,
+                      "w": 50,
+                      "r": 8,
+                      "at": 1000000000000
+                    },
+                    {
+                      "done": true,
+                      "w": 50,
+                      "r": 8,
+                      "at": 1000001200000
+                    }
+                  ]
+                },
+                {
+                  "id": "run",
+                  "sets": [
+                    {
+                      "done": true,
+                      "min": 30,
+                      "speed": 10,
+                      "at": 1000001500000
+                    }
+                  ]
+                }
+              ]
+            },
+            1000086400000
+          ],
+          "expected": 1000003300000
+        },
+        {
+          "args": [
+            {
+              "entries": [
+                {
+                  "id": "x",
+                  "sets": [
+                    {
+                      "w": 20,
+                      "r": 8,
+                      "done": false,
+                      "at": 1000000000000,
+                      "sides": {
+                        "L": {
+                          "w": 20,
+                          "r": 8,
+                          "done": true
+                        },
+                        "R": {
+                          "w": 20,
+                          "r": 8,
+                          "done": false
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            1000001200001
+          ],
+          "expected": 1000000000000
+        }
+      ]
+    },
+    {
+      "fn": "buildCompletedWorkout",
+      "cases": [
+        {
+          "args": [
+            {
+              "id": "active-1",
+              "d": "2026-08-08",
+              "start": 1000,
+              "routineIds": [
+                "routine-1"
+              ],
+              "name": "Push",
+              "bw": 80,
+              "entries": [
+                {
+                  "id": "0025",
+                  "sets": [
+                    {
+                      "done": true,
+                      "w": 60,
+                      "r": 8
+                    }
+                  ],
+                  "topW": 60,
+                  "target": {
+                    "sets": 1,
+                    "reps": 8
+                  }
+                }
+              ]
+            },
+            {
+              "end": 2000,
+              "prs": []
+            }
+          ],
+          "expected": {
+            "id": "active-1",
+            "d": "2026-08-08",
+            "start": 1000,
+            "end": 2000,
+            "routineIds": [
+              "routine-1"
+            ],
+            "routineId": "routine-1",
+            "name": "Push",
+            "bw": 80,
+            "entries": [
+              {
+                "id": "0025",
+                "sets": [
+                  {
+                    "done": true,
+                    "w": 60,
+                    "r": 8
+                  }
+                ],
+                "topW": 60,
+                "target": {
+                  "sets": 1,
+                  "reps": 8
+                }
+              }
+            ],
+            "prs": []
+          }
+        },
+        {
+          "args": [
+            {
+              "id": "a",
+              "d": "2026-09-18",
+              "start": 1000,
+              "entries": [
+                {
+                  "id": "plank",
+                  "sets": [
+                    {
+                      "done": true,
+                      "sec": 30,
+                      "w": 0
+                    },
+                    {
+                      "done": false,
+                      "sec": 3,
+                      "planSec": 30,
+                      "w": 0
+                    },
+                    {
+                      "done": true,
+                      "sec": 28,
+                      "planSec": 45,
+                      "w": 0
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "end": 2000
+            }
+          ],
+          "expected": {
+            "id": "a",
+            "d": "2026-09-18",
+            "start": 1000,
+            "end": 2000,
+            "routineIds": [],
+            "routineId": null,
+            "entries": [
+              {
+                "id": "plank",
+                "sets": [
+                  {
+                    "done": true,
+                    "sec": 30,
+                    "w": 0
+                  },
+                  {
+                    "done": false,
+                    "sec": 30,
+                    "w": 0
+                  },
+                  {
+                    "done": true,
+                    "sec": 28,
+                    "w": 0
+                  }
+                ],
+                "topW": null,
+                "target": null
+              }
+            ],
+            "prs": []
+          }
+        },
+        {
+          "args": [
+            {
+              "id": "a",
+              "d": "2026-09-18",
+              "start": 1000,
+              "routineIds": [
+                "r"
+              ],
+              "entries": [
+                {
+                  "id": "0025",
+                  "rid": "r",
+                  "target": {
+                    "sets": 3,
+                    "reps": 5,
+                    "weight": 100
+                  },
+                  "planned": {
+                    "sets": 3,
+                    "reps": 5,
+                    "weight": 100
+                  },
+                  "sets": [
+                    {
+                      "w": 100,
+                      "r": 5,
+                      "done": true
+                    },
+                    {
+                      "w": 105,
+                      "r": 5,
+                      "done": true,
+                      "weightOrigin": "manual"
+                    },
+                    {
+                      "w": 95,
+                      "r": 5,
+                      "done": true,
+                      "weightOrigin": "manual"
+                    }
+                  ]
+                },
+                {
+                  "id": "lunge",
+                  "rid": "r",
+                  "target": {
+                    "sets": 1,
+                    "reps": 16,
+                    "side": true
+                  },
+                  "sets": [
+                    {
+                      "w": 22.5,
+                      "r": 16,
+                      "sides": {
+                        "L": {
+                          "w": 22.5,
+                          "r": 8,
+                          "done": true,
+                          "weightOrigin": "manual"
+                        },
+                        "R": {
+                          "w": 20,
+                          "r": 8,
+                          "done": true
+                        }
+                      },
+                      "done": true
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "end": 2000
+            }
+          ],
+          "expected": {
+            "id": "a",
+            "d": "2026-09-18",
+            "start": 1000,
+            "end": 2000,
+            "routineIds": [
+              "r"
+            ],
+            "routineId": "r",
+            "entries": [
+              {
+                "id": "0025",
+                "sets": [
+                  {
+                    "w": 100,
+                    "r": 5,
+                    "done": true
+                  },
+                  {
+                    "w": 105,
+                    "r": 5,
+                    "done": true
+                  },
+                  {
+                    "w": 95,
+                    "r": 5,
+                    "done": true
+                  }
+                ],
+                "topW": 105,
+                "target": {
+                  "sets": 3,
+                  "reps": 5,
+                  "weight": 100
+                },
+                "rid": "r",
+                "planned": {
+                  "sets": 3,
+                  "reps": 5,
+                  "weight": 100
+                }
+              },
+              {
+                "id": "lunge",
+                "sets": [
+                  {
+                    "w": 22.5,
+                    "r": 16,
+                    "sides": {
+                      "L": {
+                        "w": 22.5,
+                        "r": 8,
+                        "done": true
+                      },
+                      "R": {
+                        "w": 20,
+                        "r": 8,
+                        "done": true
+                      }
+                    },
+                    "done": true
+                  }
+                ],
+                "topW": 22.5,
+                "target": {
+                  "sets": 1,
+                  "reps": 16,
+                  "side": true
+                },
+                "rid": "r"
+              }
+            ],
+            "prs": []
+          }
+        },
+        {
+          "args": [
+            {
+              "id": "a",
+              "d": "2026-09-18",
+              "start": 1000,
+              "entries": [
+                {
+                  "id": "0025",
+                  "sets": [
+                    {
+                      "done": true,
+                      "w": 60,
+                      "r": 8
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "end": 2000
+            }
+          ],
+          "expected": {
+            "id": "a",
+            "d": "2026-09-18",
+            "start": 1000,
+            "end": 2000,
+            "routineIds": [],
+            "routineId": null,
+            "entries": [
+              {
+                "id": "0025",
+                "sets": [
+                  {
+                    "done": true,
+                    "w": 60,
+                    "r": 8
+                  }
+                ],
+                "topW": 60,
+                "target": null
+              }
+            ],
+            "prs": []
+          }
+        },
+        {
+          "args": [
+            {
+              "id": "w",
+              "d": "2026-08-08",
+              "start": 1,
+              "routineIds": [
+                "a",
+                "b"
+              ],
+              "entries": [
+                {
+                  "id": "0025",
+                  "sets": [
+                    {
+                      "done": true,
+                      "w": 60,
+                      "r": 8
+                    }
+                  ],
+                  "target": {
+                    "sets": 1,
+                    "reps": 8
+                  }
+                }
+              ]
+            },
+            {
+              "end": 2000
+            }
+          ],
+          "expected": {
+            "id": "w",
+            "d": "2026-08-08",
+            "start": 1,
+            "end": 2000,
+            "routineIds": [
+              "a",
+              "b"
+            ],
+            "routineId": "a",
+            "entries": [
+              {
+                "id": "0025",
+                "sets": [
+                  {
+                    "done": true,
+                    "w": 60,
+                    "r": 8
+                  }
+                ],
+                "topW": 60,
+                "target": {
+                  "sets": 1,
+                  "reps": 8
+                }
+              }
+            ],
+            "prs": []
+          }
+        },
+        {
+          "args": [
+            {
+              "id": "w",
+              "d": "2026-08-08",
+              "start": 1,
+              "routineId": "only",
+              "entries": [
+                {
+                  "id": "0025",
+                  "sets": [
+                    {
+                      "done": true,
+                      "w": 60,
+                      "r": 8
+                    }
+                  ],
+                  "target": {
+                    "sets": 1,
+                    "reps": 8
+                  }
+                }
+              ]
+            },
+            {
+              "end": 2000
+            }
+          ],
+          "expected": {
+            "id": "w",
+            "d": "2026-08-08",
+            "start": 1,
+            "end": 2000,
+            "routineIds": [
+              "only"
+            ],
+            "routineId": "only",
+            "entries": [
+              {
+                "id": "0025",
+                "sets": [
+                  {
+                    "done": true,
+                    "w": 60,
+                    "r": 8
+                  }
+                ],
+                "topW": 60,
+                "target": {
+                  "sets": 1,
+                  "reps": 8
+                }
+              }
+            ],
+            "prs": []
+          }
+        },
+        {
+          "args": [
+            {
+              "id": "w",
+              "d": "2026-08-08",
+              "start": 1,
+              "entries": [
+                {
+                  "id": "0025",
+                  "sets": [
+                    {
+                      "done": true,
+                      "w": 60,
+                      "r": 8
+                    }
+                  ],
+                  "target": {
+                    "sets": 1,
+                    "reps": 8
+                  }
+                }
+              ]
+            },
+            {
+              "end": 2000
+            }
+          ],
+          "expected": {
+            "id": "w",
+            "d": "2026-08-08",
+            "start": 1,
+            "end": 2000,
+            "routineIds": [],
+            "routineId": null,
+            "entries": [
+              {
+                "id": "0025",
+                "sets": [
+                  {
+                    "done": true,
+                    "w": 60,
+                    "r": 8
+                  }
+                ],
+                "topW": 60,
+                "target": {
+                  "sets": 1,
+                  "reps": 8
+                }
+              }
+            ],
+            "prs": []
+          }
+        },
+        {
+          "args": [
+            {
+              "id": "w",
+              "d": "2026-08-08",
+              "start": 1,
+              "routineIds": [
+                "strength",
+                "rehab"
+              ],
+              "entries": [
+                {
+                  "id": "0025",
+                  "rid": "strength",
+                  "sets": [
+                    {
+                      "done": true,
+                      "w": 60,
+                      "r": 8
+                    }
+                  ],
+                  "target": {
+                    "sets": 1,
+                    "reps": 8
+                  }
+                },
+                {
+                  "id": "0031",
+                  "rid": "rehab",
+                  "noProg": true,
+                  "sets": [
+                    {
+                      "done": true,
+                      "w": 10,
+                      "r": 12
+                    }
+                  ],
+                  "target": {
+                    "sets": 1,
+                    "reps": 12
+                  }
+                }
+              ]
+            },
+            {
+              "end": 2000
+            }
+          ],
+          "expected": {
+            "id": "w",
+            "d": "2026-08-08",
+            "start": 1,
+            "end": 2000,
+            "routineIds": [
+              "strength",
+              "rehab"
+            ],
+            "routineId": "strength",
+            "entries": [
+              {
+                "id": "0025",
+                "sets": [
+                  {
+                    "done": true,
+                    "w": 60,
+                    "r": 8
+                  }
+                ],
+                "topW": 60,
+                "target": {
+                  "sets": 1,
+                  "reps": 8
+                },
+                "rid": "strength"
+              },
+              {
+                "id": "0031",
+                "sets": [
+                  {
+                    "done": true,
+                    "w": 10,
+                    "r": 12
+                  }
+                ],
+                "topW": 10,
+                "target": {
+                  "sets": 1,
+                  "reps": 12
+                },
+                "rid": "rehab",
+                "noProg": true
+              }
+            ],
+            "prs": []
+          }
+        },
+        {
+          "args": [
+            {
+              "id": "w",
+              "d": "2026-08-08",
+              "start": 1,
+              "routineIds": [
+                "strength"
+              ],
+              "entries": [
+                {
+                  "id": "0025",
+                  "rid": "strength",
+                  "planned": {
+                    "sets": 2,
+                    "reps": 10,
+                    "weight": 60
+                  },
+                  "sets": [
+                    {
+                      "done": true,
+                      "w": 62.5,
+                      "r": 10
+                    }
+                  ],
+                  "target": {
+                    "sets": 2,
+                    "reps": 10,
+                    "weight": 62.5
+                  }
+                },
+                {
+                  "id": "0031",
+                  "sets": [
+                    {
+                      "done": true,
+                      "w": 10,
+                      "r": 12
+                    }
+                  ],
+                  "target": {
+                    "sets": 1,
+                    "reps": 12
+                  }
+                }
+              ]
+            },
+            {
+              "end": 2000
+            }
+          ],
+          "expected": {
+            "id": "w",
+            "d": "2026-08-08",
+            "start": 1,
+            "end": 2000,
+            "routineIds": [
+              "strength"
+            ],
+            "routineId": "strength",
+            "entries": [
+              {
+                "id": "0025",
+                "sets": [
+                  {
+                    "done": true,
+                    "w": 62.5,
+                    "r": 10
+                  }
+                ],
+                "topW": 62.5,
+                "target": {
+                  "sets": 2,
+                  "reps": 10,
+                  "weight": 62.5
+                },
+                "rid": "strength",
+                "planned": {
+                  "sets": 2,
+                  "reps": 10,
+                  "weight": 60
+                }
+              },
+              {
+                "id": "0031",
+                "sets": [
+                  {
+                    "done": true,
+                    "w": 10,
+                    "r": 12
+                  }
+                ],
+                "topW": 10,
+                "target": {
+                  "sets": 1,
+                  "reps": 12
+                }
+              }
+            ],
+            "prs": []
+          }
+        },
+        {
+          "args": [
+            {
+              "id": "active-1",
+              "d": "2026-08-08",
+              "start": 1000,
+              "entries": [
+                {
+                  "id": "0025",
+                  "topW": 80,
+                  "target": {
+                    "mode": "reps",
+                    "sets": 2,
+                    "reps": 8
+                  },
+                  "sets": [
+                    {
+                      "phase": "warmup",
+                      "done": true,
+                      "w": 120,
+                      "r": 8
+                    },
+                    {
+                      "done": true,
+                      "w": 75,
+                      "r": 8
+                    },
+                    {
+                      "done": true,
+                      "w": 85,
+                      "r": 7
+                    },
+                    {
+                      "done": false,
+                      "w": 100,
+                      "r": 8
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "end": 2000
+            }
+          ],
+          "expected": {
+            "id": "active-1",
+            "d": "2026-08-08",
+            "start": 1000,
+            "end": 2000,
+            "routineIds": [],
+            "routineId": null,
+            "entries": [
+              {
+                "id": "0025",
+                "sets": [
+                  {
+                    "phase": "warmup",
+                    "done": true,
+                    "w": 120,
+                    "r": 8
+                  },
+                  {
+                    "done": true,
+                    "w": 75,
+                    "r": 8
+                  },
+                  {
+                    "done": true,
+                    "w": 85,
+                    "r": 7
+                  },
+                  {
+                    "done": false,
+                    "w": 100,
+                    "r": 8
+                  }
+                ],
+                "topW": 85,
+                "target": {
+                  "mode": "reps",
+                  "sets": 2,
+                  "reps": 8
+                }
+              }
+            ],
+            "prs": []
+          }
+        },
+        {
+          "args": [
+            {
+              "id": "active-1",
+              "d": "2026-08-08",
+              "start": 1000,
+              "entries": [
+                {
+                  "id": "0025",
+                  "topW": 120,
+                  "target": {
+                    "mode": "reps",
+                    "sets": 2,
+                    "reps": 8
+                  },
+                  "sets": [
+                    {
+                      "phase": "warmup",
+                      "done": true,
+                      "w": 120,
+                      "r": 8
+                    },
+                    {
+                      "done": true,
+                      "w": 75,
+                      "r": 8
+                    },
+                    {
+                      "done": true,
+                      "w": 85,
+                      "r": 7
+                    },
+                    {
+                      "done": false,
+                      "w": 100,
+                      "r": 8
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "end": 2000
+            }
+          ],
+          "expected": {
+            "id": "active-1",
+            "d": "2026-08-08",
+            "start": 1000,
+            "end": 2000,
+            "routineIds": [],
+            "routineId": null,
+            "entries": [
+              {
+                "id": "0025",
+                "sets": [
+                  {
+                    "phase": "warmup",
+                    "done": true,
+                    "w": 120,
+                    "r": 8
+                  },
+                  {
+                    "done": true,
+                    "w": 75,
+                    "r": 8
+                  },
+                  {
+                    "done": true,
+                    "w": 85,
+                    "r": 7
+                  },
+                  {
+                    "done": false,
+                    "w": 100,
+                    "r": 8
+                  }
+                ],
+                "topW": 85,
+                "target": {
+                  "mode": "reps",
+                  "sets": 2,
+                  "reps": 8
+                }
+              }
+            ],
+            "prs": []
+          }
+        },
+        {
+          "args": [
+            {
+              "id": "active-1",
+              "d": "2026-08-08",
+              "start": 1000,
+              "entries": [
+                {
+                  "id": "0025",
+                  "topW": 60,
+                  "sets": [
+                    {
+                      "done": true,
+                      "r": 8
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "end": 2000
+            }
+          ],
+          "expected": {
+            "id": "active-1",
+            "d": "2026-08-08",
+            "start": 1000,
+            "end": 2000,
+            "routineIds": [],
+            "routineId": null,
+            "entries": [
+              {
+                "id": "0025",
+                "sets": [
+                  {
+                    "done": true,
+                    "r": 8
+                  }
+                ],
+                "topW": 60,
+                "target": null
+              }
+            ],
+            "prs": []
+          }
+        },
+        {
+          "args": [
+            {
+              "id": "w",
+              "d": "2026-08-08",
+              "start": 1,
+              "routineIds": [
+                "x"
+              ],
+              "entries": [
+                {
+                  "id": "0025",
+                  "sets": [
+                    {
+                      "done": true,
+                      "w": 30,
+                      "r": 8
+                    }
+                  ],
+                  "target": {
+                    "sets": 1,
+                    "reps": 8
+                  },
+                  "noProg": true
+                },
+                {
+                  "id": "0025",
+                  "sets": [
+                    {
+                      "done": true,
+                      "w": 30,
+                      "r": 8
+                    }
+                  ],
+                  "target": {
+                    "sets": 1,
+                    "reps": 8
+                  },
+                  "noProg": true
+                }
+              ]
+            },
+            {
+              "end": 2000
+            }
+          ],
+          "expected": {
+            "id": "w",
+            "d": "2026-08-08",
+            "start": 1,
+            "end": 2000,
+            "routineIds": [
+              "x"
+            ],
+            "routineId": "x",
+            "entries": [
+              {
+                "id": "0025",
+                "sets": [
+                  {
+                    "done": true,
+                    "w": 30,
+                    "r": 8
+                  }
+                ],
+                "topW": 30,
+                "target": {
+                  "sets": 1,
+                  "reps": 8
+                },
+                "noProg": true
+              },
+              {
+                "id": "0025",
+                "sets": [
+                  {
+                    "done": true,
+                    "w": 30,
+                    "r": 8
+                  }
+                ],
+                "topW": 30,
+                "target": {
+                  "sets": 1,
+                  "reps": 8
+                },
+                "noProg": true
+              }
+            ],
+            "prs": [],
+            "excludeFromProgression": true
+          }
+        },
+        {
+          "args": [
+            {
+              "id": "w",
+              "d": "2026-08-08",
+              "start": 1,
+              "routineIds": [
+                "x"
+              ],
+              "entries": [
+                {
+                  "id": "0025",
+                  "sets": [
+                    {
+                      "done": true,
+                      "w": 30,
+                      "r": 8
+                    }
+                  ],
+                  "target": {
+                    "sets": 1,
+                    "reps": 8
+                  },
+                  "noProg": true
+                },
+                {
+                  "id": "0025",
+                  "sets": [
+                    {
+                      "done": true,
+                      "w": 30,
+                      "r": 8
+                    }
+                  ],
+                  "target": {
+                    "sets": 1,
+                    "reps": 8
+                  }
+                }
+              ]
+            },
+            {
+              "end": 2000
+            }
+          ],
+          "expected": {
+            "id": "w",
+            "d": "2026-08-08",
+            "start": 1,
+            "end": 2000,
+            "routineIds": [
+              "x"
+            ],
+            "routineId": "x",
+            "entries": [
+              {
+                "id": "0025",
+                "sets": [
+                  {
+                    "done": true,
+                    "w": 30,
+                    "r": 8
+                  }
+                ],
+                "topW": 30,
+                "target": {
+                  "sets": 1,
+                  "reps": 8
+                },
+                "noProg": true
+              },
+              {
+                "id": "0025",
+                "sets": [
+                  {
+                    "done": true,
+                    "w": 30,
+                    "r": 8
+                  }
+                ],
+                "topW": 30,
+                "target": {
+                  "sets": 1,
+                  "reps": 8
+                }
+              }
+            ],
+            "prs": []
+          }
+        },
+        {
+          "args": [
+            {
+              "id": "w",
+              "d": "2026-08-08",
+              "start": 1,
+              "routineIds": [
+                "x"
+              ],
+              "entries": [
+                {
+                  "id": "0025",
+                  "sets": [
+                    {
+                      "done": true,
+                      "w": 30,
+                      "r": 8
+                    }
+                  ],
+                  "target": {
+                    "sets": 1,
+                    "reps": 8
+                  }
+                },
+                {
+                  "id": "0025",
+                  "sets": [
+                    {
+                      "done": true,
+                      "w": 30,
+                      "r": 8
+                    }
+                  ],
+                  "target": {
+                    "sets": 1,
+                    "reps": 8
+                  }
+                }
+              ]
+            },
+            {
+              "end": 2000
+            }
+          ],
+          "expected": {
+            "id": "w",
+            "d": "2026-08-08",
+            "start": 1,
+            "end": 2000,
+            "routineIds": [
+              "x"
+            ],
+            "routineId": "x",
+            "entries": [
+              {
+                "id": "0025",
+                "sets": [
+                  {
+                    "done": true,
+                    "w": 30,
+                    "r": 8
+                  }
+                ],
+                "topW": 30,
+                "target": {
+                  "sets": 1,
+                  "reps": 8
+                }
+              },
+              {
+                "id": "0025",
+                "sets": [
+                  {
+                    "done": true,
+                    "w": 30,
+                    "r": 8
+                  }
+                ],
+                "topW": 30,
+                "target": {
+                  "sets": 1,
+                  "reps": 8
+                }
+              }
+            ],
+            "prs": []
+          }
+        },
+        {
+          "args": [
+            {
+              "id": "w1",
+              "d": "2026-08-25",
+              "start": 1,
+              "routineId": "r1",
+              "name": "Push",
+              "bw": null,
+              "entries": [
+                {
+                  "id": "0025",
+                  "sets": [
+                    {
+                      "w": 100,
+                      "r": 5,
+                      "done": true
+                    }
+                  ],
+                  "note": "  narrower grip next time  ",
+                  "notePin": true
+                }
+              ]
+            },
+            {
+              "end": 2000
+            }
+          ],
+          "expected": {
+            "id": "w1",
+            "d": "2026-08-25",
+            "start": 1,
+            "end": 2000,
+            "routineIds": [
+              "r1"
+            ],
+            "routineId": "r1",
+            "name": "Push",
+            "bw": null,
+            "entries": [
+              {
+                "id": "0025",
+                "sets": [
+                  {
+                    "w": 100,
+                    "r": 5,
+                    "done": true
+                  }
+                ],
+                "topW": 100,
+                "target": null,
+                "note": "narrower grip next time",
+                "notePin": true
+              }
+            ],
+            "prs": []
+          }
+        },
+        {
+          "args": [
+            {
+              "id": "w1",
+              "d": "2026-08-25",
+              "start": 1,
+              "routineId": "r1",
+              "name": "Push",
+              "bw": null,
+              "entries": [
+                {
+                  "id": "0025",
+                  "sets": [
+                    {
+                      "w": 100,
+                      "r": 5,
+                      "done": true
+                    }
+                  ],
+                  "note": "shoulder twinged"
+                }
+              ]
+            },
+            {
+              "end": 2000
+            }
+          ],
+          "expected": {
+            "id": "w1",
+            "d": "2026-08-25",
+            "start": 1,
+            "end": 2000,
+            "routineIds": [
+              "r1"
+            ],
+            "routineId": "r1",
+            "name": "Push",
+            "bw": null,
+            "entries": [
+              {
+                "id": "0025",
+                "sets": [
+                  {
+                    "w": 100,
+                    "r": 5,
+                    "done": true
+                  }
+                ],
+                "topW": 100,
+                "target": null,
+                "note": "shoulder twinged"
+              }
+            ],
+            "prs": []
+          }
+        },
+        {
+          "args": [
+            {
+              "id": "w1",
+              "d": "2026-08-25",
+              "start": 1,
+              "routineId": "r1",
+              "name": "Push",
+              "bw": null,
+              "entries": [
+                {
+                  "id": "0025",
+                  "sets": [
+                    {
+                      "w": 100,
+                      "r": 5,
+                      "done": true
+                    }
+                  ],
+                  "note": "   ",
+                  "notePin": true
+                }
+              ]
+            },
+            {
+              "end": 2000
+            }
+          ],
+          "expected": {
+            "id": "w1",
+            "d": "2026-08-25",
+            "start": 1,
+            "end": 2000,
+            "routineIds": [
+              "r1"
+            ],
+            "routineId": "r1",
+            "name": "Push",
+            "bw": null,
+            "entries": [
+              {
+                "id": "0025",
+                "sets": [
+                  {
+                    "w": 100,
+                    "r": 5,
+                    "done": true
+                  }
+                ],
+                "topW": 100,
+                "target": null
+              }
+            ],
+            "prs": []
+          }
+        },
+        {
+          "args": [
+            {
+              "id": "w1",
+              "d": "2026-08-25",
+              "start": 1,
+              "routineId": "r1",
+              "name": "Push",
+              "bw": null,
+              "note": "slept badly",
+              "entries": [
+                {
+                  "id": "0025",
+                  "sets": [
+                    {
+                      "w": 100,
+                      "r": 5,
+                      "done": true
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "end": 2000
+            }
+          ],
+          "expected": {
+            "id": "w1",
+            "d": "2026-08-25",
+            "start": 1,
+            "end": 2000,
+            "routineIds": [
+              "r1"
+            ],
+            "routineId": "r1",
+            "name": "Push",
+            "bw": null,
+            "entries": [
+              {
+                "id": "0025",
+                "sets": [
+                  {
+                    "w": 100,
+                    "r": 5,
+                    "done": true
+                  }
+                ],
+                "topW": 100,
+                "target": null
+              }
+            ],
+            "prs": [],
+            "note": "slept badly"
+          }
+        },
+        {
+          "args": [
+            {
+              "id": "w",
+              "d": "2026-09-17",
+              "start": 1,
+              "routineIds": [
+                "r1"
+              ],
+              "name": "Arms",
+              "entries": [
+                {
+                  "id": "a",
+                  "sg": "sg1",
+                  "sets": [
+                    {
+                      "w": 40,
+                      "r": 10,
+                      "done": true
+                    }
+                  ],
+                  "target": {}
+                },
+                {
+                  "id": "b",
+                  "sg": "sg1",
+                  "sets": [
+                    {
+                      "w": 40,
+                      "r": 10,
+                      "done": true
+                    }
+                  ],
+                  "target": {}
+                },
+                {
+                  "id": "c",
+                  "sets": [
+                    {
+                      "w": 40,
+                      "r": 10,
+                      "done": true
+                    }
+                  ],
+                  "target": {}
+                }
+              ]
+            },
+            {
+              "end": 2000
+            }
+          ],
+          "expected": {
+            "id": "w",
+            "d": "2026-09-17",
+            "start": 1,
+            "end": 2000,
+            "routineIds": [
+              "r1"
+            ],
+            "routineId": "r1",
+            "name": "Arms",
+            "entries": [
+              {
+                "id": "a",
+                "sets": [
+                  {
+                    "w": 40,
+                    "r": 10,
+                    "done": true
+                  }
+                ],
+                "topW": 40,
+                "target": {},
+                "sg": "sg1"
+              },
+              {
+                "id": "b",
+                "sets": [
+                  {
+                    "w": 40,
+                    "r": 10,
+                    "done": true
+                  }
+                ],
+                "topW": 40,
+                "target": {},
+                "sg": "sg1"
+              },
+              {
+                "id": "c",
+                "sets": [
+                  {
+                    "w": 40,
+                    "r": 10,
+                    "done": true
+                  }
+                ],
+                "topW": 40,
+                "target": {}
+              }
+            ],
+            "prs": []
+          }
+        },
+        {
+          "args": [
+            {
+              "id": "w",
+              "d": "2026-09-17",
+              "start": 1,
+              "routineIds": [
+                "r1"
+              ],
+              "name": "Arms",
+              "entries": [
+                {
+                  "id": "a",
+                  "sg": "sg1",
+                  "sets": [
+                    {
+                      "w": 40,
+                      "r": 10,
+                      "done": true
+                    }
+                  ],
+                  "target": {}
+                },
+                {
+                  "id": "b",
+                  "sg": "sg1",
+                  "sets": [
+                    {
+                      "w": 40,
+                      "r": 10,
+                      "done": false
+                    }
+                  ],
+                  "target": {}
+                },
+                {
+                  "id": "c",
+                  "sets": [
+                    {
+                      "w": 40,
+                      "r": 10,
+                      "done": true
+                    }
+                  ],
+                  "target": {}
+                }
+              ]
+            },
+            {
+              "end": 2000
+            }
+          ],
+          "expected": {
+            "id": "w",
+            "d": "2026-09-17",
+            "start": 1,
+            "end": 2000,
+            "routineIds": [
+              "r1"
+            ],
+            "routineId": "r1",
+            "name": "Arms",
+            "entries": [
+              {
+                "id": "a",
+                "sets": [
+                  {
+                    "w": 40,
+                    "r": 10,
+                    "done": true
+                  }
+                ],
+                "topW": 40,
+                "target": {}
+              },
+              {
+                "id": "c",
+                "sets": [
+                  {
+                    "w": 40,
+                    "r": 10,
+                    "done": true
+                  }
+                ],
+                "topW": 40,
+                "target": {}
+              }
+            ],
+            "prs": []
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 备份排除规则（API ≤ 30 走 fullBackupContent；31+ 走 data_extraction_rules.xml）：
+     muhe_auth 存 Bearer token（明文，EncryptedSharedPreferences 升级为 M2 项）——
+     云备份/D2D 迁移不带凭据出去，换机后重新配对即可 -->
+<full-backup-content>
+    <exclude domain="sharedpref" path="muhe_auth.xml" />
+</full-backup-content>

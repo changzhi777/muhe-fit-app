@@ -1,0 +1,31 @@
+# Android APP CI（双仓拆分独立版：仓库根即 gradle 工程，2026-11-19）
+# 测试门 = JVM 单测全量：golden fixture 243 例 + 打卡/统计/同步域（等价 monorepo :app:test）
+name: Android CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: app-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.10'
+      - name: JVM 单测（golden + 域测试）
+        run: gradle test

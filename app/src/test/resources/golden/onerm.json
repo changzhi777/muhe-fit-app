@@ -1,0 +1,272 @@
+{
+  "module": "onerm",
+  "source": "ck/frontend/src/lib/onerm.js",
+  "generatedBy": "ck/scripts/export-golden-fixtures.mjs",
+  "tolerance": 0.000001,
+  "constants": {
+    "REP_CAP": 12,
+    "WEIGHTED_REP_CAP": 15,
+    "DEFAULT_FORMULA": "epley"
+  },
+  "functions": [
+    {
+      "fn": "estimate1RM",
+      "cases": [
+        {
+          "args": [
+            100,
+            5
+          ],
+          "expected": 116.7
+        },
+        {
+          "args": [
+            60,
+            10
+          ],
+          "expected": 80
+        },
+        {
+          "args": [
+            142.5,
+            8
+          ],
+          "expected": 180.5
+        },
+        {
+          "args": [
+            100,
+            12
+          ],
+          "expected": 140
+        },
+        {
+          "args": [
+            100,
+            10,
+            "brzycki"
+          ],
+          "expected": 133.3
+        },
+        {
+          "args": [
+            100,
+            6,
+            "lombardi"
+          ],
+          "expected": 119.6
+        },
+        {
+          "args": [
+            100,
+            8,
+            "oconner"
+          ],
+          "expected": 120
+        },
+        {
+          "args": [
+            100,
+            7,
+            "mayhew"
+          ],
+          "expected": 123.9
+        },
+        {
+          "args": [
+            100,
+            9,
+            "wathan"
+          ],
+          "expected": 131.2
+        },
+        {
+          "args": [
+            100,
+            5,
+            "lander"
+          ],
+          "expected": 113.7
+        },
+        {
+          "args": [
+            100,
+            1
+          ],
+          "expected": 100
+        },
+        {
+          "args": [
+            102.5,
+            1
+          ],
+          "expected": 102.5
+        },
+        {
+          "args": [
+            100,
+            6,
+            "epley",
+            2
+          ],
+          "expected": 120
+        },
+        {
+          "args": [
+            100,
+            1,
+            "epley",
+            3
+          ],
+          "expected": 100
+        },
+        {
+          "args": [
+            100,
+            8,
+            "weighted"
+          ],
+          "expected": 125.2
+        },
+        {
+          "args": [
+            100,
+            5,
+            "weighted",
+            2
+          ],
+          "expected": 121.9
+        },
+        {
+          "args": [
+            100,
+            1,
+            "weighted",
+            3
+          ],
+          "expected": 112.3
+        },
+        {
+          "args": [
+            100,
+            13,
+            "epley"
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            100,
+            16,
+            "weighted"
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            0,
+            5
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            -5,
+            5
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            100,
+            0
+          ],
+          "expected": null
+        }
+      ]
+    },
+    {
+      "fn": "weightedEstimate",
+      "cases": [
+        {
+          "args": [
+            100,
+            3
+          ],
+          "expected": 109.13877828824566
+        },
+        {
+          "args": [
+            100,
+            12
+          ],
+          "expected": 138.69942511447056
+        }
+      ]
+    },
+    {
+      "fn": "calculate1RMAccuracy",
+      "cases": [
+        {
+          "args": [
+            1,
+            0
+          ],
+          "expected": 1
+        },
+        {
+          "args": [
+            8,
+            2
+          ],
+          "expected": 0.65
+        },
+        {
+          "args": [
+            5
+          ],
+          "expected": 0.8
+        },
+        {
+          "args": [
+            20
+          ],
+          "expected": 0
+        }
+      ]
+    },
+    {
+      "fn": "formulaOf",
+      "cases": [
+        {
+          "args": [
+            null
+          ],
+          "expected": "epley"
+        },
+        {
+          "args": [
+            {}
+          ],
+          "expected": "epley"
+        },
+        {
+          "args": [
+            {
+              "oneRmFormula": "weighted"
+            }
+          ],
+          "expected": "weighted"
+        },
+        {
+          "args": [
+            {
+              "oneRmFormula": "bogus"
+            }
+          ],
+          "expected": "epley"
+        }
+      ]
+    }
+  ]
+}

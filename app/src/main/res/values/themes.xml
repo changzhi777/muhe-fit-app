@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 启动主题：系统 Material 深色无 ActionBar（深色唯一主题，裁定 #1/C10）；
+     Compose 主题在 MainActivity 的 MuHeTheme 内接管 -->
+<resources>
+    <style name="Theme.MuHeFit" parent="android:Theme.Material.NoActionBar">
+        <item name="android:windowBackground">@color/muhe_surface</item>
+        <item name="android:statusBarColor">@color/muhe_surface</item>
+        <item name="android:navigationBarColor">@color/muhe_surface</item>
+    </style>
+</resources>

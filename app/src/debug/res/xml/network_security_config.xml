@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- debug 源集覆盖(main 版禁明文):真机连本机后台(http://<mac-ip>:3110)冒烟用。
+     release 构建不含本源集,生产口径不变。2026-11-18 真机验证线(批次 D 后台就绪配套)。 -->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="true" />
+</network-security-config>

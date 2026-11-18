@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 双语资源：values/ 中文默认 + values-en/ 英文（裁定 #8，19 语言退役仅留中英） -->
+<!-- 纪律（V0.4 起）：用户可见字符串一律落本文件，Composable 内零硬编码；两侧键必须一一对应 -->
+<resources>
+    <string name="app_name">沐禾健身</string>
+
+    <!-- 底部导航与占位提示 -->
+    <string name="nav_home">首页</string>
+    <string name="nav_plan">计划</string>
+    <string name="nav_stats">统计</string>
+    <string name="nav_profile">我的</string>
+    <string name="nav_start">开始训练</string>
+    <string name="toast_start_pending">训练流程将在 M1 后续批次接入</string>
+    <string name="toast_entry_pending">该功能将在后续批次接入</string>
+    <string name="placeholder_pending">M1 后续批次接入</string>
+    <string-array name="week_day_labels">
+        <item>一</item>
+        <item>二</item>
+        <item>三</item>
+        <item>四</item>
+        <item>五</item>
+        <item>六</item>
+        <item>日</item>
+    </string-array>
+
+    <!-- 首页（android-app.md §3.2；裁定 #5 修订后统计摘要区撤除——home_section_stats/home_card_*
+         四键已无消费方，按「不碰现有键」纪律保留不删） -->
+    <string name="home_greeting_name">你好，健身者</string>
+    <string name="home_today_workout">今日训练</string>
+    <string name="home_today_pending">今日安排待教练队列接入（M1）</string>
+    <string name="home_section_streak">连续训练</string>
+    <string name="home_section_stats">统计摘要</string>
+    <string name="home_card_weight">体重趋势</string>
+    <string name="home_card_volume">周训练量</string>
+    <string name="home_card_onerm">重点动作 1RM</string>
+    <string name="home_card_heatmap">训练热图</string>
+    <string name="home_section_quick">快捷入口</string>
+    <string name="quick_library">动作库</string>
+    <string name="quick_checkin">打卡</string>
+    <string name="quick_muscles">肌图</string>
+    <string name="entry_history">训练历史</string>
+
+    <!-- 计划（routines 编排入口） -->
+    <string name="plan_title">周计划</string>
+    <string name="plan_arrange">安排训练</string>
+
+    <!-- 我的（android-app.md §3.3 聚合页） -->
+    <string name="profile_guest">访客模式 · 数据仅存本机</string>
+    <string name="profile_login">设备配对登录</string>
+    <string name="profile_section_training">训练数据</string>
+    <string name="profile_progress_photos">进展照片</string>
+    <string name="profile_measurements">身体围度</string>
+    <string name="profile_balance">结构平衡</string>
+    <string name="profile_section_settings">设置</string>
+    <string name="profile_pref_training">训练偏好</string>
+    <string name="profile_reminders">提醒</string>
+    <string name="profile_units_lang">单位与语言</string>
+    <string name="profile_equipment">器材</string>
+    <string name="profile_appearance">外观</string>
+    <string name="profile_coach">AI Coach</string>
+    <string name="profile_section_data">数据</string>
+    <string name="profile_backup">备份导出</string>
+    <string name="profile_reset">重置</string>
+    <string name="profile_section_about">关于</string>
+    <string name="profile_about_body">版本与开源信息 · M1 上线后填充</string>
+
+    <!-- 登录/配对（login-design.md V0.1 逐区落地；品牌名复用 app_name） -->
+    <string name="login_slogan">你的训练 · 你的重量 · 你的档案</string>
+    <string name="login_privacy">数据只存在你自己的服务器上</string>
+    <string name="login_cta_scan">扫码配对</string>
+    <string name="login_cta_scan_cd">扫码配对，需要相机权限</string>
+    <string name="login_scan_hint">对准已登录设备出码的配对码</string>
+    <string name="login_cta_manual">输入配对码</string>
+    <string name="login_code_placeholder">8 位配对码</string>
+    <string name="login_code_confirm">确认</string>
+    <string name="login_code_count">%1$d/8</string>
+    <string name="login_hint_line1">配对码在已登录设备的「我的 → 设备配对」生成</string>
+    <string name="login_hint_line2">一码一设备，过期后请在已登录设备重新生成</string>
+    <string name="login_guest">先逛逛</string>
+    <string name="login_server_prefix">服务器 %1$s</string>
+    <string name="login_server_address">服务器地址</string>
+    <string name="login_server_test">测试连接</string>
+    <string name="login_server_save">保存</string>
+    <string name="login_dot_unknown">尚未测试</string>
+    <string name="login_dot_reachable">服务器可达</string>
+    <string name="login_dot_unreachable">服务器不可达</string>
+    <string name="login_error_code_invalid">配对码无效或已过期，请在已登录设备重新生成</string>
+    <string name="login_error_unreachable">无法连接 %1$s，检查地址与网络</string>
+    <string name="login_retry">重试</string>
+    <string name="login_camera_denied">未获得相机权限，无法扫码</string>
+    <string name="login_camera_grant">去授权</string>
+    <string name="login_pair_success">配对成功</string>
+
+    <!-- AI 教练对话屏（M2 骨架；契约 api-go/openapi.yaml /api/coach/*，数据源 StubCoachApi demo 两轮） -->
+    <string name="coach_title">AI 教练</string>
+    <string name="coach_status_thinking">思考中…</string>
+    <string name="coach_status_suggestion">有一条建议等你</string>
+    <string name="coach_status_idle">随时待命</string>
+    <string name="coach_back_cd">返回</string>
+    <string name="coach_greeting">你好，我是你的教练。我根据你的回答制定计划，并根据你的实际训练记录来调整。未经你确认，什么都不会变。</string>
+    <string name="coach_not_configured_title">教练还没就绪</string>
+    <string name="coach_not_configured_body">先完成设备配对登录，AI 教练才能读你的训练数据并给出建议。</string>
+    <string name="coach_go_setup">去配对登录</string>
+    <string name="coach_typing_eta">通常需要一两分钟。可以先离开，回来再看，它会继续跑。</string>
+    <string name="coach_chip_review">复盘我的训练</string>
+    <string name="coach_input_hint">给教练留言…</string>
+    <string name="coach_input_hint_create">想改什么？</string>
+    <string name="coach_input_hint_thinking">教练正在思考…</string>
+    <string name="coach_send">发送</string>
+    <string name="coach_kind_create">计划</string>
+    <string name="coach_kind_review">建议</string>
+    <string name="coach_kind_debrief">训练复盘</string>
+    <string name="coach_debrief_score">%1$d/10 分</string>
+    <string name="coach_proposal_accept">采纳</string>
+    <string name="coach_proposal_dismiss">全部放弃</string>
+    <string name="coach_applied">已采纳！计划已更新。</string>
+    <string name="coach_dismissed">好的。没有新的依据，我不会再提这些。</string>
+    <string name="coach_demo_notice">演示数据 · 真教练服务随 Go 服务端批次接入</string>
+    <string name="coach_demo_nochange">我把你的训练从头看了一遍，暂时没有什么要改的。保持节奏，再来几次训练后再问我。</string>
+    <string name="coach_demo_proposal_summary">最近的训练完成度不错。基于你的记录，我建议做两处小调整，让下次训练更顺。</string>
+    <string name="coach_demo_change_1">「下肢日」深蹲组数 4 → 5</string>
+    <string name="coach_demo_change_2">卧推重量进阶 +2.5 kg</string>
+    <string name="coach_demo_change_3">「核心收尾」加入平板支撑 3 × 45 秒</string>
+
+    <!-- 我的页数据充实（M2）：登录态 / Room 计数 / 本月训练聚合；现有 profile_ 键零改动 -->
+    <string name="profile_paired">已配对 · 数据多端同步</string>
+    <string name="profile_logout">退出配对</string>
+    <string name="profile_month_summary">本月训练 %1$d 天 · 连续 %2$d 天</string>
+    <string name="profile_month_empty">本月还没有训练与打卡记录</string>
+    <string name="profile_row_count">%1$d 条记录</string>
+    <string name="profile_row_pending">待后续批次接入</string>
+    <string name="profile_coach_subtitle">训练计划与复盘对话</string>
+    <string name="profile_toast_logout">已退出配对</string>
+
+    <!-- 打卡屏（M2，android-app.md §3.4；CheckIn.jsx 语义移植；禁手输纪律） -->
+    <string name="checkin_title">打卡</string>
+    <string name="checkin_back">返回</string>
+    <string name="checkin_subtitle_cards">在健身房出示此码</string>
+    <string name="checkin_subtitle_empty">添加你的健身卡</string>
+    <string name="checkin_add_card">添加卡片</string>
+    <string name="checkin_add_hint">用相机拍下会员码或导入会员卡照片即可添加。到店无需装其他 App，打开本屏出示就行。</string>
+    <string name="checkin_card_default">健身卡</string>
+    <string name="checkin_move_left">左移</string>
+    <string name="checkin_move_right">右移</string>
+    <string name="checkin_card_position">%1$d / %2$d</string>
+    <string name="checkin_record">记录到场</string>
+    <string name="checkin_done_toast">已记录到场</string>
+    <string name="checkin_scan_add">扫码添加</string>
+    <string name="checkin_scan_hint">对准健身房会员码</string>
+    <string name="scan_close">关闭扫码</string>
+    <string name="scan_camera_denied">未获得相机权限，无法扫码</string>
+    <string name="scan_camera_grant">去授权</string>
+    <string name="checkin_not_qr">这不是二维码，这里只能出示 QR 会员码</string>
+    <string name="checkin_card_added">卡片已添加</string>
+    <string name="checkin_section_history">打卡历史</string>
+    <string name="checkin_month_stats">本月 %1$d 次 · 连续 %2$d 天</string>
+    <string name="checkin_history_empty">该月还没有打卡记录</string>
+    <string name="checkin_prev_month">上一月</string>
+    <string name="checkin_next_month">下一月</string>
+
+    <!-- 打卡屏卡编辑/删除（V1.2；CheckIn.jsx CardSheet/CardFace 语义；码值禁手输——只来自重扫） -->
+    <string name="checkin_edit_card">编辑卡片</string>
+    <string name="checkin_remove_card">删除卡片</string>
+    <string name="checkin_remove_title">删除这张卡？</string>
+    <string name="checkin_remove_confirm">删除</string>
+    <string name="checkin_cancel">取消</string>
+    <string name="checkin_card_label">卡名</string>
+    <string name="checkin_label_placeholder">例如：powerhouse 旗舰店</string>
+    <string name="checkin_rescan">重新扫码</string>
+    <string name="checkin_save_card">保存卡片</string>
+    <string name="checkin_card_updated">卡片已更新</string>
+    <string name="checkin_card_removed">卡片已删除</string>
+    <string name="checkin_card_gone">卡片已在其他设备被删除</string>
+
+    <!-- 统计 Tab（裁定 #5 修订：统计独立 Tab 回归，5 Tab 架构；Stats.jsx 结构移植真数据版） -->
+    <string name="stats_title">统计</string>
+    <string name="stats_subtitle">进步与历史</string>
+    <string name="stats_tile_workouts">总训练</string>
+    <string name="stats_tile_month">本月训练</string>
+    <string name="stats_tile_streak">连续天数</string>
+    <string name="stats_tile_weight">30 天体重</string>
+    <string name="stats_value_kg">%1$s kg</string>
+    <string name="stats_heatmap_title">训练热图 · 近 12 周</string>
+    <string name="stats_heatmap_subtitle">按当日完成组数着色</string>
+    <string name="stats_legend_less">少</string>
+    <string name="stats_legend_more">多</string>
+    <string name="stats_weight_title">体重趋势</string>
+    <string name="stats_weight_latest">最近称重 %1$s</string>
+    <string name="stats_weight_empty">暂无体重记录</string>
+    <string name="stats_volume_title">训练量</string>
+    <string name="stats_volume_this_week">本周</string>
+    <string name="stats_volume_weeks_ago">%1$d 周前</string>
+    <string name="stats_volume_sets">%1$d 组</string>
+    <string name="stats_volume_empty">近四周还没有训练</string>
+    <string name="stats_onerm_title">重点动作 Est. 1RM</string>
+    <string name="stats_onerm_detail">%1$s × %2$s</string>
+    <string name="stats_onerm_empty">完成训练后，这里会出现估算 1RM</string>
+    <string name="stats_bodymap_title">肌图</string>
+    <string name="stats_bodymap_pending">肌平衡 · 疲劳 · 力量三视图 · M2 后段移植</string>
+    <string name="stats_empty_title">还没有训练记录</string>
+    <string name="stats_empty_body">完成第一次训练，热图与曲线就会出现。</string>
+    <string name="stats_empty_go_home">去开练</string>
+    <string name="library_title">动作库</string>
+    <string name="library_count_fmt">共 %1$d 个动作</string>
+    <string name="library_search_hint">搜索动作名称（中 / 英）</string>
+    <string name="library_clear_search">清空搜索</string>
+    <string name="library_no_results">未找到匹配的动作</string>
+    <string name="library_no_results_hint">换个关键词，或试试英文名</string>
+    <string name="library_empty_catalog">动作目录为空</string>
+
+    <!-- 同步状态横幅（V1.6 同步接线；对齐 PWA SyncBanner：syncing 转圈小字 / failed 红字+重试 / ok 静默） -->
+    <string name="sync_syncing">同步中…</string>
+    <string name="sync_failed">同步失败，更改已保存在本机</string>
+    <string name="sync_retry">重试</string>
+</resources>

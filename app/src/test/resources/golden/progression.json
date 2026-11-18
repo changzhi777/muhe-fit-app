@@ -1,0 +1,7374 @@
+{
+  "module": "progression",
+  "source": "ck/frontend/src/lib/progression.js",
+  "generatedBy": "ck/scripts/export-golden-fixtures.mjs",
+  "tolerance": 0.000001,
+  "constants": {
+    "DELOAD_FACTOR": 0.9,
+    "DELOAD_AFTER": {
+      "linear": 3,
+      "greyskull": 1,
+      "double": 3,
+      "triple": 3,
+      "time": 3
+    },
+    "DELOAD_FACTOR_MIN": 0.5,
+    "DELOAD_FACTOR_MAX": 0.95,
+    "DEFAULT_SEC_INCREMENT": 5,
+    "MAX_BW_SETS": 6,
+    "MAX_TRIPLE_SETS": 10,
+    "POLICIES_FOR": {
+      "reps": [
+        "off",
+        "linear",
+        "greyskull",
+        "double",
+        "triple"
+      ],
+      "time": [
+        "off",
+        "time"
+      ],
+      "cardio": [
+        "off"
+      ]
+    }
+  },
+  "catalog": {
+    "2269": {
+      "eq": "wheel roller",
+      "bp": "waist",
+      "n": "ab roller crunch",
+      "assisted": false
+    },
+    "4209": {
+      "eq": "body weight",
+      "bp": "upper legs",
+      "n": "1 to 2 jump box",
+      "assisted": false
+    },
+    "4918": {
+      "eq": "body weight",
+      "bp": "cardio",
+      "n": "alternate high hop",
+      "assisted": false
+    },
+    "5965": {
+      "eq": "body weight",
+      "bp": "full body",
+      "n": "1 2 stick drill",
+      "assisted": false
+    },
+    "0025": {
+      "eq": "barbell",
+      "bp": "chest",
+      "n": "barbell bench press",
+      "assisted": false
+    }
+  },
+  "functions": [
+    {
+      "fn": "policyFor",
+      "cases": [
+        {
+          "args": [
+            {
+              "id": "2269"
+            },
+            null,
+            "reps"
+          ],
+          "expected": "linear"
+        },
+        {
+          "args": [
+            {
+              "id": "2269",
+              "mode": "time"
+            },
+            null,
+            "time"
+          ],
+          "expected": "off"
+        },
+        {
+          "args": [
+            {
+              "id": "4918"
+            },
+            null,
+            "cardio"
+          ],
+          "expected": "off"
+        },
+        {
+          "args": [
+            {
+              "id": "2269"
+            },
+            {
+              "prog": "greyskull"
+            },
+            "reps"
+          ],
+          "expected": "greyskull"
+        },
+        {
+          "args": [
+            {
+              "id": "2269",
+              "prog": "double"
+            },
+            {
+              "prog": "greyskull"
+            },
+            "reps"
+          ],
+          "expected": "double"
+        },
+        {
+          "args": [
+            {
+              "id": "2269",
+              "mode": "time",
+              "prog": "greyskull"
+            },
+            null,
+            "time"
+          ],
+          "expected": "off"
+        },
+        {
+          "args": [
+            {
+              "id": "4918",
+              "prog": "linear"
+            },
+            null,
+            "cardio"
+          ],
+          "expected": "off"
+        }
+      ]
+    },
+    {
+      "fn": "weightIncrement",
+      "cases": [
+        {
+          "args": [
+            {
+              "id": "2269",
+              "inc": 1
+            },
+            "kg"
+          ],
+          "expected": 1
+        },
+        {
+          "args": [
+            {
+              "id": "2269"
+            },
+            "kg"
+          ],
+          "expected": 2.5
+        },
+        {
+          "args": [
+            {
+              "id": "4209",
+              "inc": 0
+            },
+            "kg"
+          ],
+          "expected": 5
+        }
+      ]
+    },
+    {
+      "fn": "epley1RM",
+      "cases": [
+        {
+          "args": [
+            60,
+            8
+          ],
+          "expected": 76
+        },
+        {
+          "args": [
+            60,
+            0
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            0,
+            8
+          ],
+          "expected": null
+        }
+      ]
+    },
+    {
+      "fn": "deloadTarget1RM",
+      "cases": [
+        {
+          "args": [
+            60,
+            8
+          ],
+          "expected": 68.4
+        },
+        {
+          "args": [
+            60,
+            8,
+            0.8
+          ],
+          "expected": 60.8
+        },
+        {
+          "args": [
+            60,
+            8,
+            0.9,
+            true
+          ],
+          "expected": 61.2
+        }
+      ]
+    },
+    {
+      "fn": "deloadFactorOf",
+      "cases": [
+        {
+          "args": [
+            {}
+          ],
+          "expected": 0.9
+        },
+        {
+          "args": [
+            {
+              "deloadFactor": 0.8
+            }
+          ],
+          "expected": 0.8
+        },
+        {
+          "args": [
+            {
+              "deloadFactor": 0.1
+            }
+          ],
+          "expected": 0.9
+        }
+      ]
+    },
+    {
+      "fn": "snapWeight",
+      "cases": [
+        {
+          "args": [
+            61.3,
+            1.25
+          ],
+          "expected": 61.3
+        },
+        {
+          "args": [
+            62.5,
+            5
+          ],
+          "expected": 65
+        }
+      ]
+    },
+    {
+      "fn": "addStep",
+      "cases": [
+        {
+          "args": [
+            60,
+            2.5,
+            2.5
+          ],
+          "expected": 62.5
+        },
+        {
+          "args": [
+            397,
+            10,
+            10
+          ],
+          "expected": 407
+        },
+        {
+          "args": [
+            62.5,
+            5,
+            5
+          ],
+          "expected": 67.5
+        }
+      ]
+    },
+    {
+      "fn": "stepWeight",
+      "cases": [
+        {
+          "args": [
+            60,
+            2.5,
+            1
+          ],
+          "expected": 62.5
+        },
+        {
+          "args": [
+            60,
+            2.5,
+            -1
+          ],
+          "expected": 57.5
+        }
+      ]
+    },
+    {
+      "fn": "deloadTo",
+      "cases": [
+        {
+          "args": [
+            60,
+            2.5
+          ],
+          "expected": 55
+        },
+        {
+          "args": [
+            55,
+            2.5
+          ],
+          "expected": 50
+        },
+        {
+          "args": [
+            5,
+            2.5
+          ],
+          "expected": 2.5
+        }
+      ]
+    },
+    {
+      "fn": "plannedOf",
+      "cases": [
+        {
+          "args": [
+            {
+              "id": "2269",
+              "sets": 2,
+              "reps": 10,
+              "weight": 60,
+              "prog": "linear",
+              "note": "x"
+            }
+          ],
+          "expected": {
+            "sets": 2,
+            "reps": 10,
+            "weight": 60
+          }
+        },
+        {
+          "args": [
+            {
+              "id": "2269",
+              "sets": 3,
+              "reps": 12,
+              "repsMin": 8,
+              "weight": 40
+            }
+          ],
+          "expected": {
+            "sets": 3,
+            "reps": 12,
+            "repsMin": 8,
+            "weight": 40
+          }
+        },
+        {
+          "args": [
+            {
+              "id": "2269",
+              "mode": "time",
+              "sets": 2,
+              "sec": 45,
+              "weight": 0
+            }
+          ],
+          "expected": {
+            "sets": 2,
+            "sec": 45,
+            "weight": 0
+          }
+        },
+        {
+          "args": [
+            {
+              "id": "2269",
+              "sets": 3,
+              "setsMax": 5,
+              "reps": 12,
+              "repsMin": 8,
+              "weight": 60,
+              "mode": "reps",
+              "prog": "triple"
+            }
+          ],
+          "expected": {
+            "sets": 3,
+            "reps": 12,
+            "repsMin": 8,
+            "setsMax": 5,
+            "weight": 60
+          }
+        }
+      ]
+    },
+    {
+      "fn": "planChanged",
+      "cases": [
+        {
+          "args": [
+            {
+              "sets": 2,
+              "reps": 10,
+              "weight": 60
+            },
+            {
+              "id": "2269",
+              "sets": 2,
+              "reps": 10,
+              "weight": 80
+            }
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            {
+              "sets": 2,
+              "reps": 10,
+              "weight": 60
+            },
+            {
+              "id": "2269",
+              "sets": 2,
+              "reps": 12,
+              "weight": 60
+            }
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            {
+              "sets": 2,
+              "reps": 10,
+              "weight": 60
+            },
+            {
+              "id": "2269",
+              "sets": 3,
+              "reps": 10,
+              "weight": 60
+            }
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            {
+              "sets": 2,
+              "reps": 10,
+              "weight": 60
+            },
+            {
+              "id": "2269",
+              "sets": 2,
+              "reps": 12,
+              "repsMin": 10,
+              "weight": 60
+            }
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            null,
+            {
+              "id": "2269",
+              "sets": 2,
+              "reps": 12
+            }
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            {
+              "sets": 3,
+              "reps": 12,
+              "repsMin": 8,
+              "setsMax": 5,
+              "weight": 60
+            },
+            {
+              "id": "2269",
+              "sets": 3,
+              "setsMax": 6,
+              "reps": 12,
+              "repsMin": 8,
+              "weight": 60,
+              "mode": "reps",
+              "prog": "triple"
+            }
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            {
+              "sets": 3,
+              "reps": 12,
+              "repsMin": 8,
+              "setsMax": 5,
+              "weight": 60
+            },
+            {
+              "id": "2269",
+              "sets": 3,
+              "setsMax": 5,
+              "reps": 12,
+              "repsMin": 8,
+              "weight": 60,
+              "mode": "reps",
+              "prog": "triple"
+            }
+          ],
+          "expected": false
+        }
+      ]
+    },
+    {
+      "fn": "tripleSetsOf",
+      "cases": [
+        {
+          "args": [
+            {
+              "sets": 3,
+              "setsMax": 5
+            }
+          ],
+          "expected": {
+            "setsMin": 3,
+            "setsMax": 5
+          }
+        },
+        {
+          "args": [
+            {
+              "sets": 3
+            }
+          ],
+          "expected": {
+            "setsMin": 3,
+            "setsMax": 3
+          }
+        },
+        {
+          "args": [
+            {
+              "sets": 4,
+              "setsMax": 2
+            }
+          ],
+          "expected": {
+            "setsMin": 4,
+            "setsMax": 4
+          }
+        },
+        {
+          "args": [
+            {
+              "sets": 3,
+              "setsMax": 99
+            }
+          ],
+          "expected": {
+            "setsMin": 3,
+            "setsMax": 10
+          }
+        }
+      ]
+    },
+    {
+      "fn": "selectDeloadCandidate",
+      "cases": [
+        {
+          "args": [
+            {
+              "currentWeight": 40,
+              "targetWeight": 40,
+              "targetReps": 12,
+              "step": 2.5,
+              "factor": 0.9,
+              "reps": 12,
+              "repsMin": 8
+            }
+          ],
+          "expected": {
+            "weight": 40,
+            "reps": 8,
+            "epley": 50.7,
+            "error": 0.30000000000000426,
+            "repChange": 4,
+            "fallback": false,
+            "target1RM": 50.4,
+            "factor": 0.9,
+            "upper": 12,
+            "bottom": 8
+          }
+        },
+        {
+          "args": [
+            {
+              "currentWeight": 5,
+              "targetWeight": 5,
+              "targetReps": 8,
+              "step": 2.5,
+              "factor": 0.9,
+              "reps": 8,
+              "repsMin": 4
+            }
+          ],
+          "expected": {
+            "weight": 5,
+            "reps": 4,
+            "epley": 5.7,
+            "error": 0,
+            "repChange": 4,
+            "fallback": false,
+            "target1RM": 5.7,
+            "factor": 0.9,
+            "upper": 8,
+            "bottom": 4
+          }
+        }
+      ]
+    },
+    {
+      "fn": "readSession",
+      "cases": [
+        {
+          "args": [
+            {
+              "id": "2269",
+              "target": {
+                "sets": 3,
+                "reps": 5
+              },
+              "sets": [
+                {
+                  "w": 60,
+                  "r": 5,
+                  "done": true
+                },
+                {
+                  "w": 60,
+                  "r": 5,
+                  "done": true
+                },
+                {
+                  "w": 60,
+                  "r": 6,
+                  "done": true
+                }
+              ]
+            }
+          ],
+          "expected": {
+            "mode": "reps",
+            "target": {
+              "sets": 3,
+              "reps": 5
+            },
+            "goal": 5,
+            "reps": [
+              5,
+              5,
+              6
+            ],
+            "weight": 60,
+            "count": 3,
+            "low": 5,
+            "amrap": 6,
+            "ok": true
+          },
+          "label": "全中"
+        },
+        {
+          "args": [
+            {
+              "id": "2269",
+              "target": {
+                "sets": 3,
+                "reps": 5
+              },
+              "sets": [
+                {
+                  "w": 60,
+                  "r": 5,
+                  "done": true
+                },
+                {
+                  "w": 60,
+                  "r": 5,
+                  "done": true
+                },
+                {
+                  "w": 60,
+                  "r": 3,
+                  "done": true
+                }
+              ]
+            }
+          ],
+          "expected": {
+            "mode": "reps",
+            "target": {
+              "sets": 3,
+              "reps": 5
+            },
+            "goal": 5,
+            "reps": [
+              5,
+              5,
+              3
+            ],
+            "weight": 60,
+            "count": 3,
+            "low": 3,
+            "amrap": 3,
+            "ok": false
+          },
+          "label": "勾了但次数短"
+        },
+        {
+          "args": [
+            {
+              "id": "2269",
+              "target": {
+                "sets": 3,
+                "reps": 5
+              },
+              "sets": [
+                {
+                  "w": 60,
+                  "r": 5,
+                  "done": true
+                },
+                {
+                  "w": 60,
+                  "r": 5,
+                  "done": true
+                },
+                {
+                  "w": 60,
+                  "r": 0,
+                  "done": false
+                }
+              ]
+            }
+          ],
+          "expected": {
+            "mode": "reps",
+            "target": {
+              "sets": 3,
+              "reps": 5
+            },
+            "goal": 5,
+            "reps": [
+              5,
+              5,
+              0
+            ],
+            "weight": 60,
+            "count": 3,
+            "low": 0,
+            "amrap": 0,
+            "ok": false
+          },
+          "label": "未勾的组"
+        },
+        {
+          "args": [
+            {
+              "id": "2269",
+              "target": {
+                "sets": 3,
+                "reps": 5
+              },
+              "sets": [
+                {
+                  "w": 60,
+                  "r": 5,
+                  "done": true
+                },
+                {
+                  "w": 60,
+                  "r": 5,
+                  "done": true
+                }
+              ]
+            }
+          ],
+          "expected": {
+            "mode": "reps",
+            "target": {
+              "sets": 3,
+              "reps": 5
+            },
+            "goal": 5,
+            "reps": [
+              5,
+              5
+            ],
+            "weight": 60,
+            "count": 2,
+            "low": 5,
+            "amrap": 5,
+            "ok": false
+          },
+          "label": "组数不足"
+        },
+        {
+          "args": [
+            {
+              "id": "2269",
+              "target": {},
+              "sets": [
+                {
+                  "w": 60,
+                  "r": 5,
+                  "done": true
+                }
+              ]
+            }
+          ],
+          "expected": {
+            "mode": "reps",
+            "target": {},
+            "goal": 0,
+            "reps": [
+              5
+            ],
+            "weight": 60,
+            "count": 1,
+            "low": 5,
+            "amrap": 5,
+            "ok": false
+          },
+          "label": "无处方"
+        },
+        {
+          "args": [
+            {
+              "id": "2269",
+              "target": {
+                "sets": 2,
+                "sec": 45,
+                "mode": "time"
+              },
+              "sets": [
+                {
+                  "sec": 45,
+                  "w": 0,
+                  "done": true
+                },
+                {
+                  "sec": 50,
+                  "w": 0,
+                  "done": true
+                }
+              ]
+            }
+          ],
+          "expected": {
+            "mode": "time",
+            "target": {
+              "sets": 2,
+              "sec": 45,
+              "mode": "time"
+            },
+            "goal": 45,
+            "held": [
+              45,
+              50
+            ],
+            "weight": 0,
+            "best": 50,
+            "ok": true
+          },
+          "label": "计时满"
+        },
+        {
+          "args": [
+            {
+              "id": "2269",
+              "target": {
+                "sets": 2,
+                "sec": 45,
+                "mode": "time"
+              },
+              "sets": [
+                {
+                  "sec": 45,
+                  "done": true
+                },
+                {
+                  "sec": 30,
+                  "done": true
+                }
+              ]
+            }
+          ],
+          "expected": {
+            "mode": "time",
+            "target": {
+              "sets": 2,
+              "sec": 45,
+              "mode": "time"
+            },
+            "goal": 45,
+            "held": [
+              45,
+              30
+            ],
+            "weight": 0,
+            "best": 45,
+            "ok": false
+          },
+          "label": "计时不足"
+        },
+        {
+          "args": [
+            {
+              "id": "2269",
+              "target": {
+                "sets": 2,
+                "sec": 30,
+                "mode": "time",
+                "side": true
+              },
+              "sets": [
+                {
+                  "sec": 30,
+                  "done": true,
+                  "side": "L"
+                },
+                {
+                  "sec": 30,
+                  "done": true,
+                  "side": "R"
+                },
+                {
+                  "sec": 30,
+                  "done": true,
+                  "side": "L"
+                },
+                {
+                  "sec": 30,
+                  "done": true,
+                  "side": "R"
+                }
+              ]
+            }
+          ],
+          "expected": {
+            "mode": "time",
+            "target": {
+              "sets": 2,
+              "sec": 30,
+              "mode": "time",
+              "side": true
+            },
+            "goal": 30,
+            "held": [
+              30,
+              30,
+              30,
+              30
+            ],
+            "weight": 0,
+            "best": 30,
+            "ok": true
+          },
+          "label": "per-side 全满"
+        },
+        {
+          "args": [
+            {
+              "id": "2269",
+              "target": {
+                "sets": 2,
+                "sec": 30,
+                "mode": "time",
+                "side": true
+              },
+              "sets": [
+                {
+                  "sec": 30,
+                  "done": true,
+                  "side": "L"
+                },
+                {
+                  "sec": 30,
+                  "done": true,
+                  "side": "R"
+                },
+                {
+                  "sec": 15,
+                  "done": true,
+                  "side": "L"
+                },
+                {
+                  "sec": 30,
+                  "done": true,
+                  "side": "R"
+                }
+              ]
+            }
+          ],
+          "expected": {
+            "mode": "time",
+            "target": {
+              "sets": 2,
+              "sec": 30,
+              "mode": "time",
+              "side": true
+            },
+            "goal": 30,
+            "held": [
+              30,
+              30,
+              15,
+              30
+            ],
+            "weight": 0,
+            "best": 30,
+            "ok": false
+          },
+          "label": "per-side 第二对短"
+        },
+        {
+          "args": [
+            {
+              "id": "2269",
+              "target": {
+                "sets": 2,
+                "sec": 30,
+                "mode": "time",
+                "side": true
+              },
+              "sets": [
+                {
+                  "sec": 30,
+                  "done": true,
+                  "side": "L"
+                },
+                {
+                  "sec": 30,
+                  "done": true,
+                  "side": "R"
+                }
+              ]
+            }
+          ],
+          "expected": {
+            "mode": "time",
+            "target": {
+              "sets": 2,
+              "sec": 30,
+              "mode": "time",
+              "side": true
+            },
+            "goal": 30,
+            "held": [
+              30,
+              30
+            ],
+            "weight": 0,
+            "best": 30,
+            "ok": false
+          },
+          "label": "per-side 半数行"
+        },
+        {
+          "args": [
+            {
+              "id": "2269",
+              "target": {
+                "sets": 2,
+                "reps": 5,
+                "mode": "reps"
+              },
+              "sets": [
+                {
+                  "w": 20,
+                  "r": 8,
+                  "done": true,
+                  "warmup": true
+                },
+                {
+                  "w": 60,
+                  "r": 5,
+                  "done": true
+                },
+                {
+                  "w": 60,
+                  "r": 6,
+                  "done": true
+                }
+              ]
+            }
+          ],
+          "expected": {
+            "mode": "reps",
+            "target": {
+              "sets": 2,
+              "reps": 5,
+              "mode": "reps"
+            },
+            "goal": 5,
+            "reps": [
+              5,
+              6
+            ],
+            "weight": 60,
+            "count": 2,
+            "low": 5,
+            "amrap": 6,
+            "ok": true
+          },
+          "label": "热身不进读数"
+        },
+        {
+          "args": [
+            {
+              "id": "2269",
+              "target": {
+                "sets": 2,
+                "sec": 45,
+                "mode": "time"
+              },
+              "sets": [
+                {
+                  "sec": 45,
+                  "done": true,
+                  "warmup": true
+                },
+                {
+                  "sec": 45,
+                  "done": true
+                },
+                {
+                  "sec": 30,
+                  "done": true
+                }
+              ]
+            }
+          ],
+          "expected": {
+            "mode": "time",
+            "target": {
+              "sets": 2,
+              "sec": 45,
+              "mode": "time"
+            },
+            "goal": 45,
+            "held": [
+              45,
+              30
+            ],
+            "weight": 0,
+            "best": 45,
+            "ok": false
+          },
+          "label": "计时热身"
+        },
+        {
+          "args": [
+            {
+              "id": "2269",
+              "target": {
+                "sets": 1,
+                "reps": 5
+              },
+              "sets": [
+                {
+                  "phase": "warmup",
+                  "w": 120,
+                  "r": 20,
+                  "done": true
+                },
+                {
+                  "phase": "work",
+                  "warmup": true,
+                  "w": 60,
+                  "r": 5,
+                  "done": true
+                }
+              ]
+            }
+          ],
+          "expected": {
+            "mode": "reps",
+            "target": {
+              "sets": 1,
+              "reps": 5
+            },
+            "goal": 5,
+            "reps": [
+              5
+            ],
+            "weight": 60,
+            "count": 1,
+            "low": 5,
+            "amrap": 5,
+            "ok": true
+          },
+          "label": "phase 权威"
+        },
+        {
+          "args": [
+            {
+              "id": "2269",
+              "target": {
+                "sets": 3,
+                "reps": 6,
+                "backoffStep": 2
+              },
+              "sets": [
+                {
+                  "w": 26,
+                  "r": 6,
+                  "done": true
+                },
+                {
+                  "w": 24,
+                  "r": 6,
+                  "done": true
+                },
+                {
+                  "w": 20,
+                  "r": 6,
+                  "done": true
+                }
+              ]
+            }
+          ],
+          "expected": {
+            "mode": "reps",
+            "target": {
+              "sets": 3,
+              "reps": 6,
+              "backoffStep": 2
+            },
+            "goal": 6,
+            "reps": [
+              6,
+              6,
+              0
+            ],
+            "weight": 26,
+            "count": 3,
+            "low": 0,
+            "amrap": 0,
+            "ok": false
+          },
+          "label": "back-off 取轻 miss"
+        },
+        {
+          "args": [
+            {
+              "id": "2269",
+              "target": {
+                "sets": 3,
+                "reps": 6,
+                "backoffStep": 2
+              },
+              "sets": [
+                {
+                  "w": 26,
+                  "r": 6,
+                  "done": true
+                },
+                {
+                  "w": 25,
+                  "r": 6,
+                  "done": true
+                },
+                {
+                  "w": 24,
+                  "r": 6,
+                  "done": true
+                }
+              ]
+            }
+          ],
+          "expected": {
+            "mode": "reps",
+            "target": {
+              "sets": 3,
+              "reps": 6,
+              "backoffStep": 2
+            },
+            "goal": 6,
+            "reps": [
+              6,
+              6,
+              6
+            ],
+            "weight": 26,
+            "count": 3,
+            "low": 6,
+            "amrap": 6,
+            "ok": true
+          },
+          "label": "back-off 偏重仍 ok"
+        },
+        {
+          "args": [
+            {
+              "id": "2269",
+              "target": {
+                "sets": 4,
+                "reps": 12,
+                "rowReps": [
+                  12,
+                  12,
+                  12,
+                  9
+                ]
+              },
+              "sets": [
+                {
+                  "w": 60,
+                  "r": 12,
+                  "done": true
+                },
+                {
+                  "w": 60,
+                  "r": 12,
+                  "done": true
+                },
+                {
+                  "w": 60,
+                  "r": 12,
+                  "done": true
+                },
+                {
+                  "w": 60,
+                  "r": 9,
+                  "done": true
+                }
+              ]
+            }
+          ],
+          "expected": {
+            "mode": "reps",
+            "target": {
+              "sets": 4,
+              "reps": 12,
+              "rowReps": [
+                12,
+                12,
+                12,
+                9
+              ]
+            },
+            "goal": 12,
+            "reps": [
+              12,
+              12,
+              12,
+              9
+            ],
+            "weight": 60,
+            "count": 4,
+            "low": 9,
+            "amrap": 9,
+            "ok": true
+          },
+          "label": "triple 按每组目标判 ok"
+        },
+        {
+          "args": [
+            {
+              "id": "2269",
+              "target": {
+                "sets": 4,
+                "reps": 12,
+                "rowReps": [
+                  12,
+                  12,
+                  12,
+                  9
+                ]
+              },
+              "sets": [
+                {
+                  "w": 60,
+                  "r": 12,
+                  "done": true
+                },
+                {
+                  "w": 60,
+                  "r": 12,
+                  "done": true
+                },
+                {
+                  "w": 60,
+                  "r": 12,
+                  "done": true
+                },
+                {
+                  "w": 60,
+                  "r": 8,
+                  "done": true
+                }
+              ]
+            }
+          ],
+          "expected": {
+            "mode": "reps",
+            "target": {
+              "sets": 4,
+              "reps": 12,
+              "rowReps": [
+                12,
+                12,
+                12,
+                9
+              ]
+            },
+            "goal": 12,
+            "reps": [
+              12,
+              12,
+              12,
+              8
+            ],
+            "weight": 60,
+            "count": 4,
+            "low": 8,
+            "amrap": 8,
+            "ok": false
+          },
+          "label": "triple 第四组短 miss"
+        }
+      ]
+    },
+    {
+      "fn": "stallCount",
+      "cases": [
+        {
+          "args": [
+            [
+              {
+                "ok": true
+              },
+              {
+                "ok": true
+              }
+            ]
+          ],
+          "expected": 0
+        },
+        {
+          "args": [
+            [
+              {
+                "ok": false
+              },
+              {
+                "ok": false
+              },
+              {
+                "ok": false
+              }
+            ]
+          ],
+          "expected": 3
+        },
+        {
+          "args": [
+            [
+              {
+                "ok": false
+              },
+              {
+                "ok": true
+              },
+              {
+                "ok": false
+              }
+            ]
+          ],
+          "expected": 1
+        },
+        {
+          "args": [
+            []
+          ],
+          "expected": 0
+        },
+        {
+          "args": [
+            [
+              {
+                "ok": false,
+                "weight": 40,
+                "low": 8
+              },
+              {
+                "ok": false,
+                "weight": 40,
+                "low": 9
+              },
+              {
+                "ok": false,
+                "weight": 40,
+                "low": 8
+              },
+              {
+                "ok": false,
+                "weight": 40,
+                "low": 9
+              },
+              {
+                "ok": false,
+                "weight": 40,
+                "low": 8
+              }
+            ],
+            "double"
+          ],
+          "expected": 3
+        },
+        {
+          "args": [
+            [
+              {
+                "ok": false,
+                "weight": 40,
+                "low": 9
+              },
+              {
+                "ok": false,
+                "weight": 40,
+                "low": 9
+              },
+              {
+                "ok": false,
+                "weight": 40,
+                "low": 9
+              },
+              {
+                "ok": false,
+                "weight": 40,
+                "low": 10
+              }
+            ],
+            "double"
+          ],
+          "expected": 0
+        }
+      ]
+    },
+    {
+      "fn": "sessionsFor",
+      "cases": [
+        {
+          "args": [
+            {
+              "unit": "kg",
+              "workouts": [
+                {
+                  "d": "2026-01-01",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 1,
+                        "reps": 5
+                      },
+                      "sets": [
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "d": "2026-01-02",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 1,
+                        "reps": 5
+                      },
+                      "sets": [
+                        {
+                          "w": 60,
+                          "r": 0,
+                          "done": false
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "d": "2026-01-03",
+                  "entries": [
+                    {
+                      "id": "other",
+                      "target": {},
+                      "sets": [
+                        {
+                          "w": 20,
+                          "r": 5,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "2269",
+            null,
+            null
+          ],
+          "expected": [
+            {
+              "d": "2026-01-01",
+              "mode": "reps",
+              "target": {
+                "sets": 1,
+                "reps": 5
+              },
+              "goal": 5,
+              "reps": [
+                5
+              ],
+              "weight": 60,
+              "count": 1,
+              "low": 5,
+              "amrap": 5,
+              "ok": true
+            }
+          ]
+        },
+        {
+          "args": [
+            {
+              "unit": "kg",
+              "workouts": [
+                {
+                  "d": "2026-01-01",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "sets": [
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "2269",
+            null,
+            null
+          ],
+          "expected": [
+            {
+              "d": "2026-01-01",
+              "mode": "reps",
+              "target": {},
+              "goal": 0,
+              "reps": [
+                5
+              ],
+              "weight": 60,
+              "count": 1,
+              "low": 5,
+              "amrap": 5,
+              "ok": false
+            }
+          ]
+        },
+        {
+          "args": [
+            {
+              "unit": "kg",
+              "workouts": [
+                {
+                  "d": "2026-03-01",
+                  "routineIds": [
+                    "heavy"
+                  ],
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "rid": "heavy",
+                      "target": {
+                        "sets": 2,
+                        "reps": 10,
+                        "weight": 60
+                      },
+                      "sets": [
+                        {
+                          "w": 60,
+                          "r": 10,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 10,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "d": "2026-03-03",
+                  "routineIds": [
+                    "light"
+                  ],
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "rid": "light",
+                      "target": {
+                        "sets": 2,
+                        "reps": 15,
+                        "weight": 40
+                      },
+                      "sets": [
+                        {
+                          "w": 40,
+                          "r": 15,
+                          "done": true
+                        },
+                        {
+                          "w": 40,
+                          "r": 15,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "2269",
+            null,
+            "heavy"
+          ],
+          "expected": [
+            {
+              "d": "2026-03-01",
+              "rid": "heavy",
+              "mode": "reps",
+              "target": {
+                "sets": 2,
+                "reps": 10,
+                "weight": 60
+              },
+              "goal": 10,
+              "reps": [
+                10,
+                10
+              ],
+              "weight": 60,
+              "count": 2,
+              "low": 10,
+              "amrap": 10,
+              "ok": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "fn": "nextPrescription",
+      "cases": [
+        {
+          "args": [
+            {
+              "unit": "kg",
+              "workouts": [
+                {
+                  "d": "2026-01-01",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 3,
+                        "reps": 5,
+                        "weight": 60
+                      },
+                      "sets": [
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "2269",
+              "sets": 3,
+              "reps": 5,
+              "prog": "off"
+            }
+          ],
+          "expected": {
+            "policy": "off",
+            "kind": "off"
+          },
+          "label": "off 无意见"
+        },
+        {
+          "args": [
+            {
+              "unit": "kg",
+              "workouts": []
+            },
+            {
+              "id": "4918",
+              "sets": 1,
+              "min": 20
+            }
+          ],
+          "expected": {
+            "policy": "off",
+            "kind": "off"
+          },
+          "label": "cardio 恒 off"
+        },
+        {
+          "args": [
+            {
+              "unit": "kg",
+              "workouts": []
+            },
+            {
+              "id": "2269",
+              "sets": 3,
+              "reps": 5,
+              "weight": 60,
+              "prog": "linear"
+            }
+          ],
+          "expected": {
+            "policy": "linear",
+            "kind": "first",
+            "why": [
+              "Nothing logged yet, so this session sets the baseline."
+            ]
+          },
+          "label": "first 无历史"
+        },
+        {
+          "args": [
+            {
+              "unit": "kg",
+              "workouts": [
+                {
+                  "d": "2026-01-01",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 3,
+                        "reps": 5,
+                        "weight": 60
+                      },
+                      "sets": [
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "2269",
+              "sets": 3,
+              "reps": 5,
+              "weight": 60,
+              "prog": "linear"
+            }
+          ],
+          "expected": {
+            "policy": "linear",
+            "kind": "up",
+            "weight": 62.5,
+            "why": [
+              "Every rep last time. {0} {1} more.",
+              2.5,
+              "kg"
+            ]
+          },
+          "label": "hit → up 62.5"
+        },
+        {
+          "args": [
+            {
+              "unit": "kg",
+              "workouts": [
+                {
+                  "d": "2026-01-01",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 3,
+                        "reps": 5,
+                        "weight": 60
+                      },
+                      "sets": [
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 3,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "2269",
+              "sets": 3,
+              "reps": 5,
+              "weight": 60,
+              "prog": "linear"
+            }
+          ],
+          "expected": {
+            "policy": "linear",
+            "kind": "hold",
+            "weight": 60,
+            "why": [
+              "Missed reps last time. Same weight again ({0} of {1} to go).",
+              2,
+              3
+            ]
+          },
+          "label": "miss → hold 60"
+        },
+        {
+          "args": [
+            {
+              "unit": "kg",
+              "workouts": [
+                {
+                  "d": "2026-01-01",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 3,
+                        "reps": 5,
+                        "weight": 60
+                      },
+                      "sets": [
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 0,
+                          "done": false
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "2269",
+              "sets": 3,
+              "reps": 5,
+              "weight": 60,
+              "prog": "linear"
+            }
+          ],
+          "expected": {
+            "policy": "linear",
+            "kind": "hold",
+            "weight": 60,
+            "why": [
+              "Missed reps last time. Same weight again ({0} of {1} to go).",
+              2,
+              3
+            ]
+          },
+          "label": "未勾 → hold 60"
+        },
+        {
+          "args": [
+            {
+              "unit": "kg",
+              "workouts": [
+                {
+                  "d": "2026-01-01",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 3,
+                        "reps": 5,
+                        "weight": 60
+                      },
+                      "sets": [
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 3,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "d": "2026-01-02",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 3,
+                        "reps": 5,
+                        "weight": 60
+                      },
+                      "sets": [
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 4,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 4,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "d": "2026-01-03",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 3,
+                        "reps": 5,
+                        "weight": 60
+                      },
+                      "sets": [
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 4,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "2269",
+              "sets": 3,
+              "reps": 5,
+              "weight": 60,
+              "prog": "linear"
+            }
+          ],
+          "expected": {
+            "policy": "linear",
+            "kind": "deload",
+            "weight": 55,
+            "reps": 5,
+            "sets": 3,
+            "target1RM": 63,
+            "deloadFactor": 0.9,
+            "why": [
+              "Stuck for {0} sessions. Epley deload to {1} {2} for {3} reps.",
+              3,
+              55,
+              "kg",
+              5
+            ]
+          },
+          "label": "三连 miss → deload 55"
+        },
+        {
+          "args": [
+            {
+              "unit": "kg",
+              "workouts": [
+                {
+                  "d": "2026-01-01",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 3,
+                        "reps": 8,
+                        "weight": 60
+                      },
+                      "sets": [
+                        {
+                          "w": 60,
+                          "r": 6,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 6,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 6,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "d": "2026-01-02",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 3,
+                        "reps": 8,
+                        "weight": 60
+                      },
+                      "sets": [
+                        {
+                          "w": 60,
+                          "r": 6,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 6,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 6,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "d": "2026-01-03",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 3,
+                        "reps": 8,
+                        "weight": 60
+                      },
+                      "sets": [
+                        {
+                          "w": 60,
+                          "r": 6,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 6,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 6,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "2269",
+              "sets": 3,
+              "reps": 8,
+              "weight": 60,
+              "prog": "linear"
+            }
+          ],
+          "expected": {
+            "policy": "linear",
+            "kind": "deload",
+            "weight": 55,
+            "reps": 8,
+            "sets": 3,
+            "target1RM": 68.4,
+            "deloadFactor": 0.9,
+            "why": [
+              "Stuck for {0} sessions. Epley deload to {1} {2} for {3} reps.",
+              3,
+              55,
+              "kg",
+              8
+            ]
+          },
+          "label": "deload 按处方次数不按实举"
+        },
+        {
+          "args": [
+            {
+              "unit": "kg",
+              "workouts": [
+                {
+                  "d": "2026-01-01",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 3,
+                        "reps": 5,
+                        "weight": 60
+                      },
+                      "sets": [
+                        {
+                          "w": 60,
+                          "r": 4,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 4,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 4,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "d": "2026-01-02",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 3,
+                        "reps": 5,
+                        "weight": 60
+                      },
+                      "sets": [
+                        {
+                          "w": 60,
+                          "r": 4,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 4,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 4,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "d": "2026-01-03",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 3,
+                        "reps": 5,
+                        "weight": 60
+                      },
+                      "sets": [
+                        {
+                          "w": 60,
+                          "r": 4,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 4,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 4,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "2269",
+              "sets": 3,
+              "reps": 5,
+              "weight": 60,
+              "prog": "linear",
+              "deloadFactor": 0.8
+            }
+          ],
+          "expected": {
+            "policy": "linear",
+            "kind": "deload",
+            "weight": 47.5,
+            "reps": 5,
+            "sets": 3,
+            "target1RM": 56,
+            "deloadFactor": 0.8,
+            "why": [
+              "Stuck for {0} sessions. Epley deload to {1} {2} for {3} reps.",
+              3,
+              47.5,
+              "kg",
+              5
+            ]
+          },
+          "label": "配置 Epley 因子 → 47.5"
+        },
+        {
+          "args": [
+            {
+              "unit": "kg",
+              "workouts": [
+                {
+                  "d": "2026-01-01",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 3,
+                        "reps": 5,
+                        "weight": 1
+                      },
+                      "sets": [
+                        {
+                          "w": 1,
+                          "r": 1,
+                          "done": true
+                        },
+                        {
+                          "w": 1,
+                          "r": 1,
+                          "done": true
+                        },
+                        {
+                          "w": 1,
+                          "r": 1,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "d": "2026-01-02",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 3,
+                        "reps": 5,
+                        "weight": 1
+                      },
+                      "sets": [
+                        {
+                          "w": 1,
+                          "r": 1,
+                          "done": true
+                        },
+                        {
+                          "w": 1,
+                          "r": 1,
+                          "done": true
+                        },
+                        {
+                          "w": 1,
+                          "r": 1,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "d": "2026-01-03",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 3,
+                        "reps": 5,
+                        "weight": 1
+                      },
+                      "sets": [
+                        {
+                          "w": 1,
+                          "r": 1,
+                          "done": true
+                        },
+                        {
+                          "w": 1,
+                          "r": 1,
+                          "done": true
+                        },
+                        {
+                          "w": 1,
+                          "r": 1,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "2269",
+              "sets": 3,
+              "reps": 5,
+              "weight": 1,
+              "prog": "linear",
+              "inc": 2.5
+            }
+          ],
+          "expected": {
+            "policy": "linear",
+            "kind": "deload",
+            "weight": 1,
+            "reps": 5,
+            "sets": 3,
+            "target1RM": 1.1,
+            "deloadFactor": 0.9,
+            "why": [
+              "Stuck for {0} sessions. Hold {1} {2} and use {3} reps.",
+              3,
+              1,
+              "kg",
+              5
+            ]
+          },
+          "label": "低于步长 → 原地守住"
+        },
+        {
+          "args": [
+            {
+              "unit": "kg",
+              "workouts": [
+                {
+                  "d": "2026-01-01",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 3,
+                        "reps": 5,
+                        "weight": 60
+                      },
+                      "sets": [
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 3,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "d": "2026-01-02",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 3,
+                        "reps": 5,
+                        "weight": 60
+                      },
+                      "sets": [
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "d": "2026-01-03",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 3,
+                        "reps": 5,
+                        "weight": 60
+                      },
+                      "sets": [
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 3,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "2269",
+              "sets": 3,
+              "reps": 5,
+              "weight": 60,
+              "prog": "linear"
+            }
+          ],
+          "expected": {
+            "policy": "linear",
+            "kind": "hold",
+            "weight": 60,
+            "why": [
+              "Missed reps last time. Same weight again ({0} of {1} to go).",
+              2,
+              3
+            ]
+          },
+          "label": "中间 hit 清空 streak"
+        },
+        {
+          "args": [
+            {
+              "unit": "kg",
+              "workouts": [
+                {
+                  "d": "2026-01-01",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 3,
+                        "reps": 5,
+                        "weight": 60
+                      },
+                      "sets": [
+                        {
+                          "w": 60,
+                          "r": 4,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 4,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 4,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "d": "2026-01-02",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 3,
+                        "reps": 5,
+                        "weight": 60
+                      },
+                      "sets": [
+                        {
+                          "w": 60,
+                          "r": 4,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 4,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 4,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "d": "2026-01-03",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 3,
+                        "reps": 5,
+                        "weight": 60
+                      },
+                      "sets": [
+                        {
+                          "w": 60,
+                          "r": 4,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 4,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 4,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "d": "2026-01-04",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 3,
+                        "reps": 5,
+                        "weight": 55
+                      },
+                      "sets": [
+                        {
+                          "w": 55,
+                          "r": 4,
+                          "done": true
+                        },
+                        {
+                          "w": 55,
+                          "r": 4,
+                          "done": true
+                        },
+                        {
+                          "w": 55,
+                          "r": 4,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "2269",
+              "sets": 3,
+              "reps": 5,
+              "weight": 60,
+              "prog": "linear"
+            }
+          ],
+          "expected": {
+            "policy": "linear",
+            "kind": "hold",
+            "weight": 55,
+            "why": [
+              "Missed reps last time. Same weight again ({0} of {1} to go).",
+              2,
+              3
+            ]
+          },
+          "label": "deload 重开 streak"
+        },
+        {
+          "args": [
+            {
+              "unit": "kg",
+              "workouts": [
+                {
+                  "d": "2026-01-01",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 3,
+                        "reps": 5,
+                        "weight": 2.5
+                      },
+                      "sets": [
+                        {
+                          "w": 2.5,
+                          "r": 1,
+                          "done": true
+                        },
+                        {
+                          "w": 2.5,
+                          "r": 1,
+                          "done": true
+                        },
+                        {
+                          "w": 2.5,
+                          "r": 1,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "d": "2026-01-02",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 3,
+                        "reps": 5,
+                        "weight": 2.5
+                      },
+                      "sets": [
+                        {
+                          "w": 2.5,
+                          "r": 1,
+                          "done": true
+                        },
+                        {
+                          "w": 2.5,
+                          "r": 1,
+                          "done": true
+                        },
+                        {
+                          "w": 2.5,
+                          "r": 1,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "d": "2026-01-03",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 3,
+                        "reps": 5,
+                        "weight": 2.5
+                      },
+                      "sets": [
+                        {
+                          "w": 2.5,
+                          "r": 1,
+                          "done": true
+                        },
+                        {
+                          "w": 2.5,
+                          "r": 1,
+                          "done": true
+                        },
+                        {
+                          "w": 2.5,
+                          "r": 1,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "2269",
+              "sets": 3,
+              "reps": 5,
+              "weight": 60,
+              "prog": "linear"
+            }
+          ],
+          "expected": {
+            "policy": "linear",
+            "kind": "deload",
+            "weight": 2.5,
+            "reps": 5,
+            "sets": 3,
+            "target1RM": 2.6,
+            "deloadFactor": 0.9,
+            "why": [
+              "Stuck for {0} sessions. Hold {1} {2} and use {3} reps.",
+              3,
+              2.5,
+              "kg",
+              5
+            ]
+          },
+          "label": "deload 不低于一个步长"
+        },
+        {
+          "args": [
+            {
+              "unit": "kg",
+              "workouts": [
+                {
+                  "d": "2026-01-01",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 3,
+                        "reps": 5,
+                        "weight": 5
+                      },
+                      "sets": [
+                        {
+                          "w": 5,
+                          "r": 1,
+                          "done": true
+                        },
+                        {
+                          "w": 5,
+                          "r": 1,
+                          "done": true
+                        },
+                        {
+                          "w": 5,
+                          "r": 1,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "d": "2026-01-02",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 3,
+                        "reps": 5,
+                        "weight": 5
+                      },
+                      "sets": [
+                        {
+                          "w": 5,
+                          "r": 1,
+                          "done": true
+                        },
+                        {
+                          "w": 5,
+                          "r": 1,
+                          "done": true
+                        },
+                        {
+                          "w": 5,
+                          "r": 1,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "d": "2026-01-03",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 3,
+                        "reps": 5,
+                        "weight": 5
+                      },
+                      "sets": [
+                        {
+                          "w": 5,
+                          "r": 1,
+                          "done": true
+                        },
+                        {
+                          "w": 5,
+                          "r": 1,
+                          "done": true
+                        },
+                        {
+                          "w": 5,
+                          "r": 1,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "2269",
+              "sets": 3,
+              "reps": 5,
+              "weight": 60,
+              "prog": "linear"
+            }
+          ],
+          "expected": {
+            "policy": "linear",
+            "kind": "deload",
+            "weight": 2.5,
+            "reps": 5,
+            "sets": 3,
+            "target1RM": 5.2,
+            "deloadFactor": 0.9,
+            "why": [
+              "Stuck for {0} sessions. Epley deload to {1} {2} for {3} reps.",
+              3,
+              2.5,
+              "kg",
+              5
+            ]
+          },
+          "label": "deload 必须真降"
+        },
+        {
+          "args": [
+            {
+              "unit": "kg",
+              "workouts": [
+                {
+                  "d": "2026-01-01",
+                  "entries": [
+                    {
+                      "id": "4209",
+                      "target": {
+                        "sets": 3,
+                        "reps": 5,
+                        "weight": 100
+                      },
+                      "sets": [
+                        {
+                          "w": 100,
+                          "r": 5,
+                          "done": true
+                        },
+                        {
+                          "w": 100,
+                          "r": 5,
+                          "done": true
+                        },
+                        {
+                          "w": 100,
+                          "r": 5,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "4209",
+              "sets": 3,
+              "reps": 5,
+              "prog": "linear"
+            }
+          ],
+          "expected": {
+            "policy": "linear",
+            "kind": "up",
+            "weight": 105,
+            "why": [
+              "Every rep last time. {0} {1} more.",
+              5,
+              "kg"
+            ]
+          },
+          "label": "下肢步长 → 105"
+        },
+        {
+          "args": [
+            {
+              "unit": "kg",
+              "workouts": [
+                {
+                  "d": "2026-01-01",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 3,
+                        "reps": 5,
+                        "weight": 60
+                      },
+                      "sets": [
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "2269",
+              "sets": 3,
+              "reps": 5,
+              "weight": 60,
+              "prog": "linear",
+              "inc": 1
+            }
+          ],
+          "expected": {
+            "policy": "linear",
+            "kind": "up",
+            "weight": 61,
+            "why": [
+              "Every rep last time. {0} {1} more.",
+              1,
+              "kg"
+            ]
+          },
+          "label": "inc 覆盖 → 61"
+        },
+        {
+          "args": [
+            {
+              "unit": "lb",
+              "workouts": [
+                {
+                  "d": "2026-01-01",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 3,
+                        "reps": 5,
+                        "weight": 135
+                      },
+                      "sets": [
+                        {
+                          "w": 135,
+                          "r": 5,
+                          "done": true
+                        },
+                        {
+                          "w": 135,
+                          "r": 5,
+                          "done": true
+                        },
+                        {
+                          "w": 135,
+                          "r": 5,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "2269",
+              "sets": 3,
+              "reps": 5,
+              "weight": 60,
+              "prog": "linear"
+            }
+          ],
+          "expected": {
+            "policy": "linear",
+            "kind": "up",
+            "weight": 140,
+            "why": [
+              "Every rep last time. {0} {1} more.",
+              5,
+              "lb"
+            ]
+          },
+          "label": "磅制 → 140"
+        },
+        {
+          "args": [
+            {
+              "unit": "kg",
+              "workouts": [
+                {
+                  "d": "2026-01-01",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 3,
+                        "reps": 10
+                      },
+                      "sets": [
+                        {
+                          "w": 0,
+                          "r": 10,
+                          "done": true
+                        },
+                        {
+                          "w": 0,
+                          "r": 10,
+                          "done": true
+                        },
+                        {
+                          "w": 0,
+                          "r": 8,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "d": "2026-01-02",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 3,
+                        "reps": 10
+                      },
+                      "sets": [
+                        {
+                          "w": 0,
+                          "r": 10,
+                          "done": true
+                        },
+                        {
+                          "w": 0,
+                          "r": 10,
+                          "done": true
+                        },
+                        {
+                          "w": 0,
+                          "r": 9,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "d": "2026-01-03",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 3,
+                        "reps": 10
+                      },
+                      "sets": [
+                        {
+                          "w": 0,
+                          "r": 10,
+                          "done": true
+                        },
+                        {
+                          "w": 0,
+                          "r": 10,
+                          "done": true
+                        },
+                        {
+                          "w": 0,
+                          "r": 8,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "2269",
+              "sets": 3,
+              "reps": 10,
+              "weight": 0,
+              "prog": "linear",
+              "bodyweight": true
+            }
+          ],
+          "expected": {
+            "policy": "linear",
+            "kind": "hold",
+            "weight": 0,
+            "reps": 10,
+            "why": [
+              "Bodyweight: same target again until every set is clean."
+            ]
+          },
+          "label": "bw miss → hold"
+        },
+        {
+          "args": [
+            {
+              "unit": "kg",
+              "workouts": [
+                {
+                  "d": "2026-01-01",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 3,
+                        "reps": 10
+                      },
+                      "sets": [
+                        {
+                          "w": 0,
+                          "r": 10,
+                          "done": true
+                        },
+                        {
+                          "w": 0,
+                          "r": 10,
+                          "done": true
+                        },
+                        {
+                          "w": 0,
+                          "r": 10,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "2269",
+              "sets": 3,
+              "reps": 10,
+              "weight": 0,
+              "prog": "linear",
+              "bodyweight": true
+            }
+          ],
+          "expected": {
+            "policy": "linear",
+            "kind": "up",
+            "weight": 0,
+            "reps": 11,
+            "why": [
+              "Bodyweight: every rep last time, so go for {0} this time.",
+              11
+            ]
+          },
+          "label": "bw hit → reps 11"
+        },
+        {
+          "args": [
+            {
+              "unit": "kg",
+              "workouts": [
+                {
+                  "d": "2026-01-01",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 3,
+                        "reps": 15
+                      },
+                      "sets": [
+                        {
+                          "w": 0,
+                          "r": 15,
+                          "done": true
+                        },
+                        {
+                          "w": 0,
+                          "r": 15,
+                          "done": true
+                        },
+                        {
+                          "w": 0,
+                          "r": 15,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "2269",
+              "sets": 3,
+              "reps": 10,
+              "weight": 0,
+              "prog": "linear",
+              "bodyweight": true,
+              "repsMax": 15
+            }
+          ],
+          "expected": {
+            "policy": "linear",
+            "kind": "up",
+            "weight": 0,
+            "reps": 10,
+            "sets": 4,
+            "why": [
+              "{0} reps in every set! Add a set and go back to {1}.",
+              15,
+              10
+            ]
+          },
+          "label": "到顶加一组"
+        },
+        {
+          "args": [
+            {
+              "unit": "kg",
+              "workouts": [
+                {
+                  "d": "2026-01-01",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 3,
+                        "reps": 15
+                      },
+                      "sets": [
+                        {
+                          "w": 0,
+                          "r": 15,
+                          "done": true
+                        },
+                        {
+                          "w": 0,
+                          "r": 15,
+                          "done": true
+                        },
+                        {
+                          "w": 0,
+                          "r": 15,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "2269",
+              "sets": 6,
+              "reps": 10,
+              "weight": 0,
+              "prog": "linear",
+              "bodyweight": true,
+              "repsMax": 15
+            }
+          ],
+          "expected": {
+            "policy": "linear",
+            "kind": "hold",
+            "weight": 0,
+            "reps": 15,
+            "why": [
+              "{0} sets of {1}. Time to add weight or try a harder variation.",
+              6,
+              15
+            ]
+          },
+          "label": "组数封顶 → 建议换负重"
+        },
+        {
+          "args": [
+            {
+              "unit": "kg",
+              "workouts": [
+                {
+                  "d": "2026-01-01",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 3,
+                        "reps": 16
+                      },
+                      "sets": [
+                        {
+                          "w": 0,
+                          "r": 16,
+                          "done": true
+                        },
+                        {
+                          "w": 0,
+                          "r": 16,
+                          "done": true
+                        },
+                        {
+                          "w": 0,
+                          "r": 16,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "2269",
+              "sets": 3,
+              "reps": 16,
+              "weight": 0,
+              "prog": "linear",
+              "bodyweight": true,
+              "side": true
+            }
+          ],
+          "expected": {
+            "policy": "linear",
+            "kind": "up",
+            "weight": 0,
+            "reps": 18,
+            "why": [
+              "Bodyweight: every rep last time, so go for {0} this time.",
+              18
+            ]
+          },
+          "label": "单侧步进 +2"
+        },
+        {
+          "args": [
+            {
+              "unit": "kg",
+              "workouts": [
+                {
+                  "d": "2026-01-01",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 3,
+                        "reps": 16
+                      },
+                      "sets": [
+                        {
+                          "w": 0,
+                          "r": 16,
+                          "done": true
+                        },
+                        {
+                          "w": 0,
+                          "r": 16,
+                          "done": true
+                        },
+                        {
+                          "w": 0,
+                          "r": 16,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "2269",
+              "sets": 3,
+              "reps": 16,
+              "weight": 0,
+              "prog": "linear",
+              "bodyweight": true
+            }
+          ],
+          "expected": {
+            "policy": "linear",
+            "kind": "up",
+            "weight": 0,
+            "reps": 17,
+            "why": [
+              "Bodyweight: every rep last time, so go for {0} this time.",
+              17
+            ]
+          },
+          "label": "双侧步进 +1"
+        },
+        {
+          "args": [
+            {
+              "unit": "kg",
+              "workouts": [
+                {
+                  "d": "2026-01-01",
+                  "entries": [
+                    {
+                      "id": "0025",
+                      "target": {
+                        "sets": 3,
+                        "reps": 10
+                      },
+                      "sets": [
+                        {
+                          "w": 0,
+                          "r": 10,
+                          "done": true
+                        },
+                        {
+                          "w": 0,
+                          "r": 10,
+                          "done": true
+                        },
+                        {
+                          "w": 0,
+                          "r": 10,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "0025",
+              "sets": 3,
+              "reps": 10,
+              "weight": 0,
+              "prog": "linear"
+            }
+          ],
+          "expected": {
+            "policy": "linear",
+            "kind": "hold",
+            "why": [
+              "No weight logged last time. Enter what you lift and progression takes it from there."
+            ]
+          },
+          "label": "0 kg 要重量不爬次数"
+        },
+        {
+          "args": [
+            {
+              "unit": "kg",
+              "workouts": [
+                {
+                  "d": "2026-01-01",
+                  "entries": [
+                    {
+                      "id": "0025",
+                      "target": {
+                        "sets": 3,
+                        "reps": 10
+                      },
+                      "sets": [
+                        {
+                          "w": 0,
+                          "r": 10,
+                          "done": true
+                        },
+                        {
+                          "w": 0,
+                          "r": 10,
+                          "done": true
+                        },
+                        {
+                          "w": 0,
+                          "r": 10,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "0025",
+              "sets": 3,
+              "reps": 10,
+              "weight": 60,
+              "prog": "double"
+            }
+          ],
+          "expected": {
+            "policy": "double",
+            "kind": "hold",
+            "weight": 60,
+            "why": [
+              "No weight logged last time. Enter what you lift and progression takes it from there."
+            ]
+          },
+          "label": "0 kg 回落计划重量"
+        },
+        {
+          "args": [
+            {
+              "unit": "kg",
+              "workouts": [
+                {
+                  "d": "2026-01-01",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 3,
+                        "reps": 5,
+                        "weight": 60
+                      },
+                      "sets": [
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "2269",
+              "sets": 3,
+              "reps": 5,
+              "weight": 60,
+              "prog": "greyskull"
+            }
+          ],
+          "expected": {
+            "policy": "greyskull",
+            "kind": "up",
+            "weight": 62.5,
+            "why": [
+              "Every rep last time. {0} {1} more.",
+              2.5,
+              "kg"
+            ]
+          },
+          "label": "gsk hit → up 62.5"
+        },
+        {
+          "args": [
+            {
+              "unit": "kg",
+              "workouts": [
+                {
+                  "d": "2026-01-01",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 3,
+                        "reps": 5,
+                        "weight": 60
+                      },
+                      "sets": [
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 10,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "2269",
+              "sets": 3,
+              "reps": 5,
+              "weight": 60,
+              "prog": "greyskull"
+            }
+          ],
+          "expected": {
+            "policy": "greyskull",
+            "kind": "up",
+            "weight": 65,
+            "why": [
+              "Last set hit {0} reps, twice the target! Take a double jump of {1} {2}.",
+              10,
+              5,
+              "kg"
+            ]
+          },
+          "label": "gsk 末组双倍 → 双跳 65"
+        },
+        {
+          "args": [
+            {
+              "unit": "kg",
+              "workouts": [
+                {
+                  "d": "2026-01-01",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 3,
+                        "reps": 5,
+                        "weight": 60
+                      },
+                      "sets": [
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 3,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "2269",
+              "sets": 3,
+              "reps": 5,
+              "weight": 60,
+              "prog": "greyskull"
+            }
+          ],
+          "expected": {
+            "policy": "greyskull",
+            "kind": "deload",
+            "weight": 55,
+            "why": [
+              "Missed reps. Reset to {0} {1} and work back up.",
+              55,
+              "kg"
+            ]
+          },
+          "label": "gsk 首败即降 10% → 55"
+        },
+        {
+          "args": [
+            {
+              "unit": "kg",
+              "workouts": [
+                {
+                  "d": "2026-01-01",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 3,
+                        "reps": 5,
+                        "weight": 60
+                      },
+                      "sets": [
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 3,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "d": "2026-01-02",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 3,
+                        "reps": 5,
+                        "weight": 55
+                      },
+                      "sets": [
+                        {
+                          "w": 55,
+                          "r": 5,
+                          "done": true
+                        },
+                        {
+                          "w": 55,
+                          "r": 5,
+                          "done": true
+                        },
+                        {
+                          "w": 55,
+                          "r": 2,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "2269",
+              "sets": 3,
+              "reps": 5,
+              "weight": 60,
+              "prog": "greyskull"
+            }
+          ],
+          "expected": {
+            "policy": "greyskull",
+            "kind": "deload",
+            "weight": 50,
+            "why": [
+              "Missed reps. Reset to {0} {1} and work back up.",
+              50,
+              "kg"
+            ]
+          },
+          "label": "gsk 连降 55 → 50"
+        },
+        {
+          "args": [
+            {
+              "unit": "kg",
+              "workouts": [
+                {
+                  "d": "2026-01-01",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 3,
+                        "reps": 12
+                      },
+                      "sets": [
+                        {
+                          "w": 40,
+                          "r": 12,
+                          "done": true
+                        },
+                        {
+                          "w": 40,
+                          "r": 12,
+                          "done": true
+                        },
+                        {
+                          "w": 40,
+                          "r": 12,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "2269",
+              "sets": 3,
+              "reps": 12,
+              "repsMin": 8,
+              "weight": 40,
+              "prog": "double"
+            }
+          ],
+          "expected": {
+            "policy": "double",
+            "kind": "up",
+            "weight": 42.5,
+            "reps": 8,
+            "why": [
+              "Top of the rep range in every set. {0} {1} more, back to {2} reps.",
+              2.5,
+              "kg",
+              8
+            ]
+          },
+          "label": "区间顶 → up 回底"
+        },
+        {
+          "args": [
+            {
+              "unit": "kg",
+              "workouts": [
+                {
+                  "d": "2026-01-01",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 3,
+                        "reps": 8,
+                        "weight": 40
+                      },
+                      "sets": [
+                        {
+                          "w": 40,
+                          "r": 8,
+                          "done": true
+                        },
+                        {
+                          "w": 40,
+                          "r": 8,
+                          "done": true
+                        },
+                        {
+                          "w": 40,
+                          "r": 8,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "2269",
+              "sets": 3,
+              "reps": 12,
+              "repsMin": 8,
+              "weight": 40,
+              "prog": "double"
+            }
+          ],
+          "expected": {
+            "policy": "double",
+            "kind": "hold",
+            "weight": 40,
+            "reps": 9,
+            "why": [
+              "Same weight, aim for {0} reps this time.",
+              9
+            ]
+          },
+          "label": "#278 底部命中 ≠ 顶部"
+        },
+        {
+          "args": [
+            {
+              "unit": "kg",
+              "workouts": [
+                {
+                  "d": "2026-01-01",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 3,
+                        "reps": 12
+                      },
+                      "sets": [
+                        {
+                          "w": 40,
+                          "r": 10,
+                          "done": true
+                        },
+                        {
+                          "w": 40,
+                          "r": 9,
+                          "done": true
+                        },
+                        {
+                          "w": 40,
+                          "r": 9,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "2269",
+              "sets": 3,
+              "reps": 12,
+              "repsMin": 8,
+              "weight": 40,
+              "prog": "double"
+            }
+          ],
+          "expected": {
+            "policy": "double",
+            "kind": "hold",
+            "weight": 40,
+            "reps": 10,
+            "why": [
+              "Same weight, aim for {0} reps this time.",
+              10
+            ]
+          },
+          "label": "区间内 hold aim 10"
+        },
+        {
+          "args": [
+            {
+              "unit": "kg",
+              "workouts": [
+                {
+                  "d": "2026-01-01",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 3,
+                        "reps": 12
+                      },
+                      "sets": [
+                        {
+                          "w": 40,
+                          "r": 12,
+                          "done": true
+                        },
+                        {
+                          "w": 40,
+                          "r": 12,
+                          "done": true
+                        },
+                        {
+                          "w": 40,
+                          "r": 11,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "2269",
+              "sets": 3,
+              "reps": 12,
+              "repsMin": 8,
+              "weight": 40,
+              "prog": "double"
+            }
+          ],
+          "expected": {
+            "policy": "double",
+            "kind": "hold",
+            "weight": 40,
+            "reps": 12,
+            "why": [
+              "Same weight, aim for {0} reps this time.",
+              12
+            ]
+          },
+          "label": "aim 封顶"
+        },
+        {
+          "args": [
+            {
+              "unit": "kg",
+              "workouts": [
+                {
+                  "d": "2026-01-01",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 3,
+                        "reps": 12
+                      },
+                      "sets": [
+                        {
+                          "w": 40,
+                          "r": 9,
+                          "done": true
+                        },
+                        {
+                          "w": 40,
+                          "r": 9,
+                          "done": true
+                        },
+                        {
+                          "w": 40,
+                          "r": 9,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "d": "2026-01-02",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 3,
+                        "reps": 12
+                      },
+                      "sets": [
+                        {
+                          "w": 40,
+                          "r": 9,
+                          "done": true
+                        },
+                        {
+                          "w": 40,
+                          "r": 9,
+                          "done": true
+                        },
+                        {
+                          "w": 40,
+                          "r": 9,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "d": "2026-01-03",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 3,
+                        "reps": 12
+                      },
+                      "sets": [
+                        {
+                          "w": 40,
+                          "r": 9,
+                          "done": true
+                        },
+                        {
+                          "w": 40,
+                          "r": 9,
+                          "done": true
+                        },
+                        {
+                          "w": 40,
+                          "r": 9,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "2269",
+              "sets": 3,
+              "reps": 12,
+              "repsMin": 8,
+              "weight": 40,
+              "prog": "double"
+            }
+          ],
+          "expected": {
+            "policy": "double",
+            "kind": "deload",
+            "weight": 40,
+            "reps": 8,
+            "sets": 3,
+            "target1RM": 50.4,
+            "deloadFactor": 0.9,
+            "why": [
+              "Stuck for {0} sessions. Hold {1} {2} and use {3} reps.",
+              3,
+              40,
+              "kg",
+              8
+            ]
+          },
+          "label": "三滞 → Epley deload 40×8"
+        },
+        {
+          "args": [
+            {
+              "unit": "kg",
+              "workouts": [
+                {
+                  "d": "2026-01-01",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 3,
+                        "reps": 13
+                      },
+                      "sets": [
+                        {
+                          "w": 40,
+                          "r": 12,
+                          "done": true
+                        },
+                        {
+                          "w": 40,
+                          "r": 12,
+                          "done": true
+                        },
+                        {
+                          "w": 40,
+                          "r": 12,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "2269",
+              "sets": 3,
+              "reps": 13,
+              "repsMin": 7,
+              "weight": 40,
+              "prog": "double",
+              "side": true
+            }
+          ],
+          "expected": {
+            "policy": "double",
+            "kind": "hold",
+            "weight": 40,
+            "reps": 14,
+            "why": [
+              "Same weight, aim for {0} reps this time.",
+              14
+            ]
+          },
+          "label": "per-side 边界归一 aim 14"
+        },
+        {
+          "args": [
+            {
+              "unit": "kg",
+              "workouts": [
+                {
+                  "d": "2026-01-01",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 3,
+                        "reps": 8,
+                        "weight": 5
+                      },
+                      "sets": [
+                        {
+                          "w": 5,
+                          "r": 6,
+                          "done": true
+                        },
+                        {
+                          "w": 5,
+                          "r": 6,
+                          "done": true
+                        },
+                        {
+                          "w": 5,
+                          "r": 6,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "d": "2026-01-02",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 3,
+                        "reps": 8,
+                        "weight": 5
+                      },
+                      "sets": [
+                        {
+                          "w": 5,
+                          "r": 6,
+                          "done": true
+                        },
+                        {
+                          "w": 5,
+                          "r": 6,
+                          "done": true
+                        },
+                        {
+                          "w": 5,
+                          "r": 6,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "d": "2026-01-03",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 3,
+                        "reps": 8,
+                        "weight": 5
+                      },
+                      "sets": [
+                        {
+                          "w": 5,
+                          "r": 6,
+                          "done": true
+                        },
+                        {
+                          "w": 5,
+                          "r": 6,
+                          "done": true
+                        },
+                        {
+                          "w": 5,
+                          "r": 6,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "2269",
+              "sets": 3,
+              "reps": 8,
+              "repsMin": 4,
+              "weight": 5,
+              "inc": 2.5,
+              "prog": "double"
+            }
+          ],
+          "expected": {
+            "policy": "double",
+            "kind": "deload",
+            "weight": 5,
+            "reps": 4,
+            "sets": 3,
+            "target1RM": 5.7,
+            "deloadFactor": 0.9,
+            "why": [
+              "Stuck for {0} sessions. Hold {1} {2} and use {3} reps.",
+              3,
+              5,
+              "kg",
+              4
+            ]
+          },
+          "label": "小重量保 5 降次 4"
+        },
+        {
+          "args": [
+            {
+              "unit": "kg",
+              "workouts": [
+                {
+                  "d": "2026-01-01",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 3,
+                        "reps": 8,
+                        "weight": 60,
+                        "side": true
+                      },
+                      "sets": [
+                        {
+                          "w": 60,
+                          "r": 6,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 6,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 6,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "d": "2026-01-02",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 3,
+                        "reps": 8,
+                        "weight": 60,
+                        "side": true
+                      },
+                      "sets": [
+                        {
+                          "w": 60,
+                          "r": 6,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 6,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 6,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "d": "2026-01-03",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 3,
+                        "reps": 8,
+                        "weight": 60,
+                        "side": true
+                      },
+                      "sets": [
+                        {
+                          "w": 60,
+                          "r": 6,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 6,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 6,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "2269",
+              "sets": 3,
+              "reps": 8,
+              "repsMin": 8,
+              "weight": 40,
+              "prog": "double",
+              "side": true
+            }
+          ],
+          "expected": {
+            "policy": "double",
+            "kind": "deload",
+            "weight": 55,
+            "reps": 8,
+            "sets": 3,
+            "target1RM": 61.2,
+            "deloadFactor": 0.9,
+            "why": [
+              "Stuck for {0} sessions. Epley deload to {1} {2} for {3} reps.",
+              3,
+              55,
+              "kg",
+              8
+            ]
+          },
+          "label": "per-side Epley 偶数次"
+        },
+        {
+          "args": [
+            {
+              "unit": "kg",
+              "workouts": [
+                {
+                  "d": "2026-01-01",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 3,
+                        "reps": 5,
+                        "weight": 397
+                      },
+                      "sets": [
+                        {
+                          "w": 397,
+                          "r": 5,
+                          "done": true
+                        },
+                        {
+                          "w": 397,
+                          "r": 5,
+                          "done": true
+                        },
+                        {
+                          "w": 397,
+                          "r": 5,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "2269",
+              "sets": 3,
+              "reps": 5,
+              "weight": 397,
+              "prog": "linear",
+              "inc": 10
+            }
+          ],
+          "expected": {
+            "policy": "linear",
+            "kind": "up",
+            "weight": 407,
+            "why": [
+              "Every rep last time. {0} {1} more.",
+              10,
+              "kg"
+            ]
+          },
+          "label": "离格 397 → 407"
+        },
+        {
+          "args": [
+            {
+              "unit": "kg",
+              "workouts": [
+                {
+                  "d": "2026-01-01",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 3,
+                        "reps": 12,
+                        "weight": 397
+                      },
+                      "sets": [
+                        {
+                          "w": 397,
+                          "r": 12,
+                          "done": true
+                        },
+                        {
+                          "w": 397,
+                          "r": 12,
+                          "done": true
+                        },
+                        {
+                          "w": 397,
+                          "r": 12,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "2269",
+              "sets": 3,
+              "reps": 12,
+              "repsMin": 8,
+              "weight": 397,
+              "prog": "double",
+              "inc": 10
+            }
+          ],
+          "expected": {
+            "policy": "double",
+            "kind": "up",
+            "weight": 407,
+            "reps": 8,
+            "why": [
+              "Top of the rep range in every set. {0} {1} more, back to {2} reps.",
+              10,
+              "kg",
+              8
+            ]
+          },
+          "label": "离格 double → 407"
+        },
+        {
+          "args": [
+            {
+              "unit": "kg",
+              "workouts": [
+                {
+                  "d": "2026-01-01",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 3,
+                        "reps": 5,
+                        "weight": 60
+                      },
+                      "sets": [
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "2269",
+              "sets": 3,
+              "reps": 5,
+              "weight": 60,
+              "prog": "linear",
+              "inc": 2.5
+            }
+          ],
+          "expected": {
+            "policy": "linear",
+            "kind": "up",
+            "weight": 62.5,
+            "why": [
+              "Every rep last time. {0} {1} more.",
+              2.5,
+              "kg"
+            ]
+          },
+          "label": "在格 → 吸附 62.5"
+        },
+        {
+          "args": [
+            {
+              "unit": "kg",
+              "workouts": [
+                {
+                  "d": "2026-02-01",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 2,
+                        "sec": 45,
+                        "mode": "time"
+                      },
+                      "sets": [
+                        {
+                          "sec": 45,
+                          "w": 0,
+                          "done": true
+                        },
+                        {
+                          "sec": 45,
+                          "w": 0,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "2269",
+              "mode": "time",
+              "sets": 2,
+              "sec": 45,
+              "prog": "time"
+            }
+          ],
+          "expected": {
+            "policy": "time",
+            "kind": "up",
+            "sec": 50,
+            "why": [
+              "Held every set for the full time. Target goes up by {0}s.",
+              5
+            ]
+          },
+          "label": "全满 → +5s"
+        },
+        {
+          "args": [
+            {
+              "unit": "kg",
+              "workouts": [
+                {
+                  "d": "2026-02-01",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 2,
+                        "sec": 45,
+                        "mode": "time"
+                      },
+                      "sets": [
+                        {
+                          "sec": 45,
+                          "w": 0,
+                          "done": true
+                        },
+                        {
+                          "sec": 38,
+                          "w": 0,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "2269",
+              "mode": "time",
+              "sets": 2,
+              "sec": 45,
+              "prog": "time"
+            }
+          ],
+          "expected": {
+            "policy": "time",
+            "kind": "hold",
+            "sec": 45,
+            "why": [
+              "Came up short last time. Same target again."
+            ]
+          },
+          "label": "不足 → hold 45"
+        },
+        {
+          "args": [
+            {
+              "unit": "kg",
+              "workouts": [
+                {
+                  "d": "2026-02-01",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 2,
+                        "sec": 45,
+                        "mode": "time"
+                      },
+                      "sets": [
+                        {
+                          "sec": 45,
+                          "w": 0,
+                          "done": true
+                        },
+                        {
+                          "sec": 30,
+                          "w": 0,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "d": "2026-02-02",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 2,
+                        "sec": 45,
+                        "mode": "time"
+                      },
+                      "sets": [
+                        {
+                          "sec": 45,
+                          "w": 0,
+                          "done": true
+                        },
+                        {
+                          "sec": 32,
+                          "w": 0,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "d": "2026-02-03",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 2,
+                        "sec": 45,
+                        "mode": "time"
+                      },
+                      "sets": [
+                        {
+                          "sec": 45,
+                          "w": 0,
+                          "done": true
+                        },
+                        {
+                          "sec": 31,
+                          "w": 0,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "2269",
+              "mode": "time",
+              "sets": 2,
+              "sec": 45,
+              "prog": "time"
+            }
+          ],
+          "expected": {
+            "policy": "time",
+            "kind": "deload",
+            "sec": 40,
+            "why": [
+              "Short {0} sessions in a row. Back off to {1}s and build up again.",
+              3,
+              40
+            ]
+          },
+          "label": "三滞 → deload 40s"
+        },
+        {
+          "args": [
+            {
+              "unit": "kg",
+              "workouts": [
+                {
+                  "d": "2026-01-01",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 3,
+                        "reps": 5,
+                        "weight": 60
+                      },
+                      "sets": [
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "2269",
+              "mode": "time",
+              "sets": 2,
+              "sec": 45,
+              "prog": "time"
+            }
+          ],
+          "expected": {
+            "policy": "time",
+            "kind": "first",
+            "why": [
+              "Nothing logged yet, so this session sets the baseline."
+            ]
+          },
+          "label": "reps 历史不进 time"
+        },
+        {
+          "args": [
+            {
+              "unit": "kg",
+              "workouts": []
+            },
+            {
+              "id": "2269",
+              "sets": 3,
+              "reps": 12,
+              "repsMin": 8,
+              "setsMax": 5,
+              "weight": 60,
+              "prog": "triple"
+            }
+          ],
+          "expected": {
+            "policy": "triple",
+            "kind": "first",
+            "reps": 8,
+            "sets": 3,
+            "rowReps": [
+              8,
+              8,
+              8
+            ],
+            "why": [
+              "Nothing logged yet, so this session sets the baseline."
+            ]
+          },
+          "label": "triple first 从底部"
+        },
+        {
+          "args": [
+            {
+              "unit": "kg",
+              "workouts": [
+                {
+                  "d": "2026-01-01",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 3,
+                        "reps": 12,
+                        "rowReps": [
+                          8,
+                          8,
+                          8
+                        ]
+                      },
+                      "sets": [
+                        {
+                          "w": 60,
+                          "r": 8,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 8,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 8,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "2269",
+              "sets": 3,
+              "reps": 12,
+              "repsMin": 8,
+              "setsMax": 5,
+              "weight": 60,
+              "prog": "triple"
+            }
+          ],
+          "expected": {
+            "policy": "triple",
+            "kind": "hold",
+            "weight": 60,
+            "reps": 9,
+            "sets": 3,
+            "rowReps": [
+              9,
+              9,
+              9
+            ],
+            "why": [
+              "Same weight, aim for {0} reps in every set.",
+              9
+            ]
+          },
+          "label": "基组齐爬 aim 9"
+        },
+        {
+          "args": [
+            {
+              "unit": "kg",
+              "workouts": [
+                {
+                  "d": "2026-01-01",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 3,
+                        "reps": 12,
+                        "rowReps": [
+                          12,
+                          12,
+                          12
+                        ]
+                      },
+                      "sets": [
+                        {
+                          "w": 60,
+                          "r": 12,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 12,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 12,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "2269",
+              "sets": 3,
+              "reps": 12,
+              "repsMin": 8,
+              "setsMax": 5,
+              "weight": 60,
+              "prog": "triple"
+            }
+          ],
+          "expected": {
+            "policy": "triple",
+            "kind": "up",
+            "weight": 60,
+            "reps": 12,
+            "sets": 4,
+            "rowReps": [
+              12,
+              12,
+              12,
+              8
+            ],
+            "why": [
+              "{0} reps in every set! Add a set at {1} reps.",
+              12,
+              8
+            ]
+          },
+          "label": "到顶加组 12,12,12,8"
+        },
+        {
+          "args": [
+            {
+              "unit": "kg",
+              "workouts": [
+                {
+                  "d": "2026-01-01",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 3,
+                        "reps": 12,
+                        "rowReps": [
+                          8,
+                          8,
+                          8
+                        ]
+                      },
+                      "sets": [
+                        {
+                          "w": 60,
+                          "r": 7,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 7,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 7,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "d": "2026-01-02",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 3,
+                        "reps": 12,
+                        "rowReps": [
+                          8,
+                          8,
+                          8
+                        ]
+                      },
+                      "sets": [
+                        {
+                          "w": 60,
+                          "r": 7,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 7,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 7,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "d": "2026-01-03",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 3,
+                        "reps": 12,
+                        "rowReps": [
+                          8,
+                          8,
+                          8
+                        ]
+                      },
+                      "sets": [
+                        {
+                          "w": 60,
+                          "r": 7,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 7,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 7,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "2269",
+              "sets": 3,
+              "reps": 12,
+              "repsMin": 8,
+              "setsMax": 5,
+              "weight": 60,
+              "prog": "triple"
+            }
+          ],
+          "expected": {
+            "policy": "triple",
+            "kind": "deload",
+            "weight": 55,
+            "reps": 8,
+            "sets": 3,
+            "rowReps": [
+              8,
+              8,
+              8
+            ],
+            "why": [
+              "Stuck for {0} sessions. Deload to {1} {2} and start again at {3} sets of {4}.",
+              3,
+              55,
+              "kg",
+              3,
+              8
+            ]
+          },
+          "label": "triple 三滞 → deload 回底"
+        },
+        {
+          "args": [
+            {
+              "unit": "kg",
+              "workouts": [
+                {
+                  "d": "2026-01-01",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 4,
+                        "reps": 12,
+                        "rowReps": [
+                          12,
+                          12,
+                          12,
+                          8
+                        ]
+                      },
+                      "sets": [
+                        {
+                          "w": 60,
+                          "r": 12,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 12,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 12,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 8,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "2269",
+              "sets": 3,
+              "reps": 12,
+              "repsMin": 8,
+              "setsMax": 5,
+              "weight": 60,
+              "prog": "triple"
+            }
+          ],
+          "expected": {
+            "policy": "triple",
+            "kind": "hold",
+            "weight": 60,
+            "reps": 12,
+            "sets": 4,
+            "rowReps": [
+              12,
+              12,
+              12,
+              9
+            ],
+            "why": [
+              "Same weight, aim for {0} reps on the last set.",
+              9
+            ]
+          },
+          "label": "triple 第四组独爬 aim 9"
+        },
+        {
+          "args": [
+            {
+              "unit": "kg",
+              "workouts": [
+                {
+                  "d": "2026-01-01",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 3,
+                        "reps": 12,
+                        "rowReps": [
+                          8,
+                          8,
+                          8
+                        ]
+                      },
+                      "sets": [
+                        {
+                          "w": 60,
+                          "r": 12,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 12,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 12,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "2269",
+              "sets": 3,
+              "reps": 12,
+              "repsMin": 8,
+              "setsMax": 5,
+              "weight": 60,
+              "prog": "triple"
+            }
+          ],
+          "expected": {
+            "policy": "triple",
+            "kind": "up",
+            "weight": 60,
+            "reps": 12,
+            "sets": 4,
+            "rowReps": [
+              12,
+              12,
+              12,
+              8
+            ],
+            "why": [
+              "{0} reps in every set! Add a set at {1} reps.",
+              12,
+              8
+            ]
+          },
+          "label": "triple 超额做满顶 → 加组"
+        },
+        {
+          "args": [
+            {
+              "unit": "kg",
+              "workouts": [
+                {
+                  "d": "2026-04-01",
+                  "routineIds": [
+                    "r"
+                  ],
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "planned": {
+                        "sets": 3,
+                        "setsMax": 5,
+                        "reps": 12,
+                        "repsMin": 8,
+                        "weight": 60,
+                        "mode": "reps",
+                        "prog": "triple"
+                      },
+                      "target": {
+                        "sets": 3,
+                        "setsMax": 5,
+                        "reps": 12,
+                        "repsMin": 8,
+                        "weight": 60,
+                        "mode": "reps",
+                        "prog": "triple",
+                        "rowReps": [
+                          8,
+                          8,
+                          8
+                        ]
+                      },
+                      "sets": [
+                        {
+                          "w": 60,
+                          "r": 8,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 8,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 8,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "2269",
+              "sets": 3,
+              "setsMax": 4,
+              "reps": 12,
+              "repsMin": 8,
+              "weight": 60,
+              "mode": "reps",
+              "prog": "triple"
+            },
+            {
+              "id": "r",
+              "ex": []
+            }
+          ],
+          "expected": {
+            "policy": "triple",
+            "kind": "hold",
+            "weight": 60,
+            "reps": 9,
+            "sets": 3,
+            "rowReps": [
+              9,
+              9,
+              9
+            ],
+            "why": [
+              "Plan changed, so starting from your new target."
+            ]
+          },
+          "label": "triple 抬 setsMax → 基组重开"
+        },
+        {
+          "args": [
+            {
+              "unit": "kg",
+              "workouts": [
+                {
+                  "d": "2026-03-01",
+                  "routineId": "r",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "rid": "r",
+                      "planned": {
+                        "sets": 1,
+                        "reps": 10,
+                        "repsMin": 8,
+                        "setsMax": 1,
+                        "weight": 40
+                      },
+                      "target": {
+                        "id": "2269",
+                        "sets": 1,
+                        "setsMax": 1,
+                        "reps": 10,
+                        "repsMin": 8,
+                        "weight": 40,
+                        "inc": 5,
+                        "mode": "reps",
+                        "prog": "triple",
+                        "assisted": true,
+                        "rowReps": [
+                          10
+                        ]
+                      },
+                      "sets": [
+                        {
+                          "w": 40,
+                          "r": 10,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "2269",
+              "sets": 1,
+              "setsMax": 1,
+              "reps": 10,
+              "repsMin": 8,
+              "weight": 40,
+              "inc": 5,
+              "mode": "reps",
+              "prog": "triple",
+              "assisted": true
+            },
+            {
+              "id": "r",
+              "ex": [
+                {
+                  "id": "2269",
+                  "sets": 1,
+                  "setsMax": 1,
+                  "reps": 10,
+                  "repsMin": 8,
+                  "weight": 40,
+                  "inc": 5,
+                  "mode": "reps",
+                  "prog": "triple",
+                  "assisted": true
+                }
+              ]
+            }
+          ],
+          "expected": {
+            "policy": "triple",
+            "kind": "up",
+            "weight": 35,
+            "reps": 8,
+            "sets": 1,
+            "rowReps": [
+              8
+            ],
+            "why": [
+              "Top of the range on all {0} sets. {1} {2} less help, back to {3} sets of {4}.",
+              1,
+              5,
+              "kg",
+              1,
+              8
+            ]
+          },
+          "label": "triple 辅助器械 raise = 减助力"
+        },
+        {
+          "args": [
+            {
+              "unit": "kg",
+              "workouts": [
+                {
+                  "d": "2026-04-01",
+                  "routineIds": [
+                    "r"
+                  ],
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "planned": {
+                        "sets": 2,
+                        "reps": 15,
+                        "weight": 40
+                      },
+                      "target": {
+                        "sets": 2,
+                        "reps": 15,
+                        "weight": 40
+                      },
+                      "sets": [
+                        {
+                          "w": 40,
+                          "r": 15,
+                          "done": true
+                        },
+                        {
+                          "w": 40,
+                          "r": 15,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "2269",
+              "sets": 2,
+              "reps": 10,
+              "weight": 40,
+              "prog": "linear"
+            },
+            {
+              "id": "r",
+              "ex": []
+            }
+          ],
+          "expected": {
+            "policy": "linear",
+            "kind": "hold",
+            "weight": 40,
+            "reps": 10,
+            "why": [
+              "Plan changed, so starting from your new target."
+            ]
+          },
+          "label": "计划改动 → hold 新目标"
+        },
+        {
+          "args": [
+            {
+              "unit": "kg",
+              "workouts": [
+                {
+                  "d": "2026-04-01",
+                  "routineIds": [
+                    "r"
+                  ],
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "planned": {
+                        "sets": 3,
+                        "reps": 5,
+                        "weight": 100
+                      },
+                      "target": {
+                        "sets": 3,
+                        "reps": 5,
+                        "weight": 102.5
+                      },
+                      "sets": [
+                        {
+                          "w": 102.5,
+                          "r": 5,
+                          "done": true
+                        },
+                        {
+                          "w": 102.5,
+                          "r": 5,
+                          "done": true
+                        },
+                        {
+                          "w": 102.5,
+                          "r": 5,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "2269",
+              "sets": 3,
+              "reps": 10,
+              "weight": 70,
+              "prog": "linear"
+            },
+            {
+              "id": "r",
+              "ex": []
+            }
+          ],
+          "expected": {
+            "policy": "linear",
+            "kind": "hold",
+            "weight": 70,
+            "reps": 10,
+            "why": [
+              "Plan changed, so starting from your new target."
+            ]
+          },
+          "label": "改计划连带改重 → 开在新重"
+        },
+        {
+          "args": [
+            {
+              "unit": "kg",
+              "workouts": [
+                {
+                  "d": "2026-04-01",
+                  "routineIds": [
+                    "b"
+                  ],
+                  "entries": [
+                    {
+                      "id": "5965",
+                      "rid": "b",
+                      "planned": {
+                        "sets": 2,
+                        "reps": 15,
+                        "weight": 0
+                      },
+                      "target": {
+                        "sets": 2,
+                        "reps": 15,
+                        "weight": 0
+                      },
+                      "sets": [
+                        {
+                          "w": 0,
+                          "r": 15,
+                          "done": true
+                        },
+                        {
+                          "w": 0,
+                          "r": 15,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "5965",
+              "sets": 2,
+              "reps": 10,
+              "weight": 0,
+              "bodyweight": true
+            },
+            {
+              "id": "a",
+              "ex": []
+            }
+          ],
+          "expected": {
+            "policy": "linear",
+            "kind": "hold",
+            "weight": 0,
+            "reps": 10,
+            "why": [
+              "First time in this routine, so starting from its own target."
+            ]
+          },
+          "label": "借来的会话 → 从本例程目标起"
+        },
+        {
+          "args": [
+            {
+              "unit": "kg",
+              "workouts": [
+                {
+                  "d": "2026-04-01",
+                  "routineIds": [
+                    "b"
+                  ],
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "rid": "b",
+                      "planned": {
+                        "sets": 2,
+                        "reps": 10,
+                        "weight": 60
+                      },
+                      "target": {
+                        "sets": 2,
+                        "reps": 10,
+                        "weight": 60
+                      },
+                      "sets": [
+                        {
+                          "w": 60,
+                          "r": 10,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 10,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "2269",
+              "sets": 2,
+              "reps": 10,
+              "weight": 60,
+              "prog": "linear"
+            },
+            {
+              "id": "copy",
+              "ex": []
+            }
+          ],
+          "expected": {
+            "policy": "linear",
+            "kind": "up",
+            "weight": 62.5,
+            "why": [
+              "Every rep last time. {0} {1} more.",
+              2.5,
+              "kg"
+            ]
+          },
+          "label": "同计划复制例程 → 继续 up"
+        },
+        {
+          "args": [
+            {
+              "unit": "kg",
+              "workouts": [
+                {
+                  "d": "2026-01-01",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 3,
+                        "reps": 5,
+                        "weight": 60
+                      },
+                      "sets": [
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "d": "2026-01-08",
+                  "excludeFromProgression": true,
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 3,
+                        "reps": 5,
+                        "weight": 30
+                      },
+                      "sets": [
+                        {
+                          "w": 30,
+                          "r": 8,
+                          "done": true
+                        },
+                        {
+                          "w": 30,
+                          "r": 8,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "2269",
+              "sets": 3,
+              "reps": 5,
+              "weight": 60,
+              "prog": "linear"
+            }
+          ],
+          "expected": {
+            "policy": "linear",
+            "kind": "up",
+            "weight": 62.5,
+            "why": [
+              "Every rep last time. {0} {1} more.",
+              2.5,
+              "kg"
+            ]
+          },
+          "label": "legacy 整场排除跳过 → 62.5"
+        },
+        {
+          "args": [
+            {
+              "unit": "kg",
+              "workouts": [
+                {
+                  "d": "2026-02-01",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "target": {
+                        "sets": 3,
+                        "reps": 5,
+                        "weight": 30
+                      },
+                      "noProg": true,
+                      "sets": [
+                        {
+                          "w": 30,
+                          "r": 8,
+                          "done": true
+                        },
+                        {
+                          "w": 30,
+                          "r": 8,
+                          "done": true
+                        },
+                        {
+                          "w": 30,
+                          "r": 8,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "2269",
+              "sets": 3,
+              "reps": 5,
+              "weight": 50,
+              "prog": "linear"
+            }
+          ],
+          "expected": {
+            "policy": "linear",
+            "kind": "first",
+            "why": [
+              "Nothing logged yet, so this session sets the baseline."
+            ]
+          },
+          "label": "仅 noProg → kind first"
+        },
+        {
+          "args": [
+            {
+              "unit": "kg",
+              "workouts": [
+                {
+                  "d": "2026-03-01",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "sets": [
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "2269",
+              "sets": 3,
+              "reps": 5,
+              "weight": 60,
+              "prog": "linear"
+            }
+          ],
+          "expected": {
+            "policy": "linear",
+            "kind": "up",
+            "weight": 62.5,
+            "why": [
+              "Every rep last time. {0} {1} more.",
+              2.5,
+              "kg"
+            ]
+          },
+          "label": "旧历史 hit → up"
+        },
+        {
+          "args": [
+            {
+              "unit": "kg",
+              "workouts": [
+                {
+                  "d": "2026-03-01",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "sets": [
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "d": "2026-03-02",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "sets": [
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "d": "2026-03-03",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "sets": [
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "d": "2026-03-04",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "sets": [
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "d": "2026-03-05",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "sets": [
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "d": "2026-03-06",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "sets": [
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "d": "2026-03-07",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "sets": [
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "d": "2026-03-08",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "sets": [
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "d": "2026-03-09",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "sets": [
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "d": "2026-03-10",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "sets": [
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "d": "2026-03-11",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "sets": [
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "2269",
+              "sets": 3,
+              "reps": 5,
+              "weight": 60,
+              "prog": "linear"
+            }
+          ],
+          "expected": {
+            "policy": "linear",
+            "kind": "up",
+            "weight": 62.5,
+            "why": [
+              "Every rep last time. {0} {1} more.",
+              2.5,
+              "kg"
+            ]
+          },
+          "label": "长净历史不造滞"
+        },
+        {
+          "args": [
+            {
+              "unit": "kg",
+              "workouts": [
+                {
+                  "d": "2026-03-01",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "sets": [
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 2,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "2269",
+              "sets": 3,
+              "reps": 5,
+              "weight": 60,
+              "prog": "linear"
+            }
+          ],
+          "expected": {
+            "policy": "linear",
+            "kind": "hold",
+            "weight": 60,
+            "why": [
+              "Missed reps last time. Same weight again ({0} of {1} to go).",
+              2,
+              3
+            ]
+          },
+          "label": "旧历史真 miss → hold"
+        },
+        {
+          "args": [
+            {
+              "unit": "kg",
+              "workouts": [
+                {
+                  "d": "2026-03-01",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "sets": [
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 6,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "2269",
+              "sets": 3,
+              "reps": 5,
+              "weight": 60,
+              "prog": "linear"
+            }
+          ],
+          "expected": {
+            "policy": "linear",
+            "kind": "up",
+            "weight": 62.5,
+            "why": [
+              "Every rep last time. {0} {1} more.",
+              2.5,
+              "kg"
+            ]
+          },
+          "label": "旧重量提示语义 62.5"
+        },
+        {
+          "args": [
+            {
+              "unit": "kg",
+              "workouts": [
+                {
+                  "d": "2026-03-01",
+                  "entries": [
+                    {
+                      "id": "2269",
+                      "sets": [
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 4,
+                          "done": true
+                        },
+                        {
+                          "w": 60,
+                          "r": 5,
+                          "done": true
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "2269",
+              "sets": 3,
+              "reps": 5,
+              "weight": 60,
+              "prog": "linear"
+            }
+          ],
+          "expected": {
+            "policy": "linear",
+            "kind": "hold",
+            "weight": 60,
+            "why": [
+              "Missed reps last time. Same weight again ({0} of {1} to go).",
+              2,
+              3
+            ]
+          },
+          "label": "旧重量提示语义 hold"
+        }
+      ]
+    },
+    {
+      "fn": "applyPrescription",
+      "cases": [
+        {
+          "args": [
+            [
+              {
+                "w": 60,
+                "r": 5,
+                "done": true
+              },
+              {
+                "w": 60,
+                "r": 5,
+                "done": false
+              }
+            ],
+            {
+              "kind": "up",
+              "weight": 62.5
+            }
+          ],
+          "expected": [
+            {
+              "w": 60,
+              "r": 5,
+              "done": true
+            },
+            {
+              "w": 62.5,
+              "r": 5,
+              "done": false
+            }
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "w": 60,
+                "r": 5,
+                "done": true
+              },
+              {
+                "w": 60,
+                "r": 5,
+                "done": false
+              }
+            ],
+            {
+              "kind": "up",
+              "weight": 42.5,
+              "reps": 8
+            }
+          ],
+          "expected": [
+            {
+              "w": 60,
+              "r": 5,
+              "done": true
+            },
+            {
+              "w": 42.5,
+              "r": 8,
+              "done": false
+            }
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "w": 25,
+                "r": 10,
+                "done": false,
+                "phase": "warmup",
+                "warmup": true
+              },
+              {
+                "w": 50,
+                "r": 10,
+                "done": false
+              }
+            ],
+            {
+              "kind": "up",
+              "weight": 55
+            },
+            5,
+            45
+          ],
+          "expected": [
+            {
+              "w": 45,
+              "r": 10,
+              "done": false,
+              "phase": "warmup",
+              "warmup": true
+            },
+            {
+              "w": 55,
+              "r": 10,
+              "done": false
+            }
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "w": 25,
+                "r": 10,
+                "done": false,
+                "phase": "warmup",
+                "warmup": true
+              },
+              {
+                "w": 50,
+                "r": 10,
+                "done": false
+              }
+            ],
+            {
+              "kind": "up",
+              "weight": 55
+            },
+            5
+          ],
+          "expected": [
+            {
+              "w": 25,
+              "r": 10,
+              "done": false,
+              "phase": "warmup",
+              "warmup": true
+            },
+            {
+              "w": 55,
+              "r": 10,
+              "done": false
+            }
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "w": 60,
+                "r": 5,
+                "done": true
+              },
+              {
+                "w": 60,
+                "r": 5,
+                "done": false
+              }
+            ],
+            {
+              "kind": "off"
+            }
+          ],
+          "expected": [
+            {
+              "w": 60,
+              "r": 5,
+              "done": true
+            },
+            {
+              "w": 60,
+              "r": 5,
+              "done": false
+            }
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "w": 60,
+                "r": 5,
+                "done": true
+              },
+              {
+                "w": 60,
+                "r": 5,
+                "done": false
+              }
+            ],
+            {
+              "kind": "first"
+            }
+          ],
+          "expected": [
+            {
+              "w": 60,
+              "r": 5,
+              "done": true
+            },
+            {
+              "w": 60,
+              "r": 5,
+              "done": false
+            }
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "w": 60,
+                "r": 5,
+                "done": true
+              },
+              {
+                "w": 60,
+                "r": 5,
+                "done": false
+              }
+            ],
+            null
+          ],
+          "expected": [
+            {
+              "w": 60,
+              "r": 5,
+              "done": true
+            },
+            {
+              "w": 60,
+              "r": 5,
+              "done": false
+            }
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "sec": 45,
+                "w": 0,
+                "done": false
+              }
+            ],
+            {
+              "kind": "up",
+              "sec": 50
+            }
+          ],
+          "expected": [
+            {
+              "sec": 50,
+              "w": 0,
+              "done": false
+            }
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "w": 0,
+                "r": 10,
+                "done": false
+              },
+              {
+                "w": 0,
+                "r": 10,
+                "done": false
+              },
+              {
+                "w": 0,
+                "r": 10,
+                "done": false
+              }
+            ],
+            {
+              "kind": "up",
+              "weight": 0,
+              "reps": 10,
+              "sets": 4
+            }
+          ],
+          "expected": [
+            {
+              "w": 0,
+              "r": 10,
+              "done": false
+            },
+            {
+              "w": 0,
+              "r": 10,
+              "done": false
+            },
+            {
+              "w": 0,
+              "r": 10,
+              "done": false
+            },
+            {
+              "w": 0,
+              "r": 10,
+              "done": false
+            }
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "w": 20,
+                "r": 8,
+                "done": true,
+                "warmup": true
+              },
+              {
+                "w": 60,
+                "r": 5,
+                "done": true
+              },
+              {
+                "w": 60,
+                "r": 5,
+                "done": false
+              }
+            ],
+            {
+              "kind": "up",
+              "weight": 62.5,
+              "reps": 5,
+              "sets": 4
+            }
+          ],
+          "expected": [
+            {
+              "w": 20,
+              "r": 8,
+              "done": true,
+              "warmup": true
+            },
+            {
+              "w": 60,
+              "r": 5,
+              "done": true
+            },
+            {
+              "w": 62.5,
+              "r": 5,
+              "done": false
+            },
+            {
+              "w": 62.5,
+              "r": 5,
+              "done": false
+            },
+            {
+              "w": 62.5,
+              "r": 5,
+              "done": false
+            }
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "w": 20,
+                "r": 8,
+                "done": true,
+                "warmup": true
+              },
+              {
+                "w": 0,
+                "r": 10,
+                "done": false,
+                "phase": "warmup"
+              },
+              {
+                "w": 0,
+                "r": 10,
+                "done": false
+              }
+            ],
+            {
+              "kind": "up",
+              "weight": 0,
+              "reps": 12
+            }
+          ],
+          "expected": [
+            {
+              "w": 20,
+              "r": 8,
+              "done": true,
+              "warmup": true
+            },
+            {
+              "w": 0,
+              "r": 12,
+              "done": false,
+              "phase": "warmup"
+            },
+            {
+              "w": 0,
+              "r": 12,
+              "done": false
+            }
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "sec": 30,
+                "w": 0,
+                "done": false,
+                "phase": "warmup"
+              },
+              {
+                "sec": 30,
+                "w": 0,
+                "done": false
+              }
+            ],
+            {
+              "kind": "up",
+              "sec": 35
+            }
+          ],
+          "expected": [
+            {
+              "sec": 35,
+              "w": 0,
+              "done": false,
+              "phase": "warmup"
+            },
+            {
+              "sec": 35,
+              "w": 0,
+              "done": false
+            }
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "w": 20,
+                "r": 8,
+                "done": true,
+                "warmup": true
+              },
+              {
+                "w": 25,
+                "r": 6,
+                "done": true,
+                "warmup": true
+              }
+            ],
+            {
+              "kind": "up",
+              "weight": 62.5,
+              "reps": 5,
+              "sets": 4
+            }
+          ],
+          "expected": [
+            {
+              "w": 20,
+              "r": 8,
+              "done": true,
+              "warmup": true
+            },
+            {
+              "w": 25,
+              "r": 6,
+              "done": true,
+              "warmup": true
+            }
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "type": "dropset",
+                "w": 60,
+                "r": 5,
+                "done": false,
+                "drops": [
+                  {
+                    "w": 40,
+                    "r": 8
+                  }
+                ]
+              }
+            ],
+            {
+              "kind": "up",
+              "weight": 62.5
+            }
+          ],
+          "expected": [
+            {
+              "type": "dropset",
+              "w": 62.5,
+              "r": 5,
+              "done": false,
+              "drops": [
+                {
+                  "w": 40,
+                  "r": 8
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "w": 60,
+                "r": 10,
+                "done": true
+              },
+              {
+                "w": 60,
+                "r": 8,
+                "done": false
+              },
+              {
+                "w": 60,
+                "r": 8,
+                "done": false
+              }
+            ],
+            {
+              "kind": "hold",
+              "weight": 60,
+              "reps": 12,
+              "sets": 4,
+              "rowReps": [
+                12,
+                12,
+                12,
+                8
+              ]
+            },
+            2.5
+          ],
+          "expected": [
+            {
+              "w": 60,
+              "r": 10,
+              "done": true
+            },
+            {
+              "w": 60,
+              "r": 12,
+              "done": false
+            },
+            {
+              "w": 60,
+              "r": 12,
+              "done": false
+            },
+            {
+              "w": 60,
+              "r": 8,
+              "done": false
+            }
+          ],
+          "label": "triple 已记录保留 + 加组落目标"
+        },
+        {
+          "args": [
+            [
+              {
+                "w": 20,
+                "r": 16,
+                "sides": {
+                  "L": {
+                    "w": 20,
+                    "r": 8,
+                    "done": false
+                  },
+                  "R": {
+                    "w": 20,
+                    "r": 8,
+                    "done": false
+                  }
+                },
+                "done": false
+              },
+              {
+                "w": 20,
+                "r": 16,
+                "sides": {
+                  "L": {
+                    "w": 20,
+                    "r": 8,
+                    "done": false
+                  },
+                  "R": {
+                    "w": 20,
+                    "r": 8,
+                    "done": false
+                  }
+                },
+                "done": false
+              }
+            ],
+            {
+              "kind": "hold",
+              "weight": 20,
+              "reps": 20,
+              "sets": 3,
+              "rowReps": [
+                20,
+                20,
+                16
+              ]
+            },
+            2.5
+          ],
+          "expected": [
+            {
+              "w": 20,
+              "r": 20,
+              "sides": {
+                "L": {
+                  "w": 20,
+                  "r": 10,
+                  "done": false
+                },
+                "R": {
+                  "w": 20,
+                  "r": 10,
+                  "done": false
+                }
+              },
+              "done": false
+            },
+            {
+              "w": 20,
+              "r": 20,
+              "sides": {
+                "L": {
+                  "w": 20,
+                  "r": 10,
+                  "done": false
+                },
+                "R": {
+                  "w": 20,
+                  "r": 10,
+                  "done": false
+                }
+              },
+              "done": false
+            },
+            {
+              "w": 20,
+              "r": 16,
+              "sides": {
+                "L": {
+                  "w": 20,
+                  "r": 8,
+                  "done": false
+                },
+                "R": {
+                  "w": 20,
+                  "r": 8,
+                  "done": false
+                }
+              },
+              "done": false
+            }
+          ],
+          "label": "triple 每组目标拆单侧"
+        }
+      ]
+    }
+  ]
+}

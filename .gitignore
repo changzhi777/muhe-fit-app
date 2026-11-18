@@ -1,0 +1,11 @@
+# Gradle / 构建产物
+.gradle/
+build/
+app/build/
+
+# 本地环境（各人 SDK 路径不同，永不入库）
+local.properties
+
+# IDE
+.idea/
+*.iml

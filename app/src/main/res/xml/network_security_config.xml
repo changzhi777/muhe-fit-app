@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 网络安全配置(main 版,生产口径):禁明文 HTTP——API 走 https://mufit.qingmulife.com(裁定 #22)。
+     debug 构建由 src/debug/res/xml/ 同名文件覆盖(放行局域网明文,真机连本机后台冒烟用)。 -->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="false" />
+</network-security-config>

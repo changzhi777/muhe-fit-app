@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- 网络层必需（Retrofit/OkHttp → mufit.qingmulife.com，裁定 #22） -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- 相机权限：打卡扫码（M2 已落地，裁定 #14；V1.0 随打卡屏启用） -->
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <application
+        android:name=".MuHeApp"
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:networkSecurityConfig="@xml/network_security_config"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.MuHeFit">
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>

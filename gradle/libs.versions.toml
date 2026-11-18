@@ -1,0 +1,92 @@
+# 沐禾健身 APP · Version Catalog
+# 依赖白名单纪律（decisions.md 裁定 #12 / C8）：白名单外加依赖必须过审，本文件即白名单的落地清单。
+# 版本说明：骨架期钉一组互配的已知稳定版（Kotlin 2.1.x + AGP 8.7 + Gradle 8.10），
+# 本机无 Android SDK 未实机构建验证；首次真实构建时可整体升一档（升 Kotlin 时 KSP 前缀必须同步）。
+
+[versions]
+# ── 构建链 ──
+agp = "8.7.3"
+kotlin = "2.1.0"
+ksp = "2.1.0-1.0.29"            # 前两段必须与 kotlin 版本一致
+hilt = "2.53.1"
+# ── Compose ──
+composeBom = "2024.12.01"       # BOM 统一管理 ui / material3 / foundation 版本
+# ── AndroidX ──
+androidxCore = "1.15.0"
+androidxLifecycle = "2.8.7"
+androidxActivity = "1.9.3"
+androidxNavigation = "2.8.5"
+androidxRoom = "2.6.1"
+# CameraX（M2 打卡扫码取流）——白名单外依赖过审注记：打卡屏是 M2 清单首项（android-app.md §3.4），
+# 用户批准 M2 批次启动即隐含放行；仅打卡扫码消费，不另开用途。1.4.x 稳定组。
+androidxCamera = "1.4.2"
+hiltNavigationCompose = "1.2.0"
+# ── 网络（裁定 #2：Retrofit + OkHttp + kotlinx.serialization）──
+retrofit = "2.11.0"
+okhttp = "4.12.0"
+kotlinxSerialization = "1.7.3"
+# ── 其他 ──
+kotlinxCoroutines = "1.9.0"     # 语言级设施（裁定 #1），测试用
+coil = "2.7.0"                  # 图片加载 + 媒体缓存（裁定 #7）
+zxingEmbedded = "4.3.0"         # QR 生成/扫描一套依赖（裁定打卡域，M2 打卡屏消费）
+zxingCore = "3.5.3"             # zxing 核心（embedded 的底层，显式钉版本）
+junit = "4.13.2"
+
+[libraries]
+# ── Compose 全家桶（白名单 #12）──
+androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
+androidx-compose-ui = { group = "androidx.compose.ui", name = "ui" }
+androidx-compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
+androidx-compose-foundation = { group = "androidx.compose.foundation", name = "foundation" }  # HorizontalPager 载体（BOM 统一版本；白名单 #12 Compose 全家桶成员，显式声明）
+androidx-compose-navigation = { group = "androidx.navigation", name = "navigation-compose", version.ref = "androidxNavigation" }
+
+# ── AndroidX 基座 ──
+androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidxCore" }
+androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "androidxLifecycle" }
+androidx-lifecycle-viewmodel-compose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "androidxLifecycle" }
+androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "androidxActivity" }
+
+# ── Room（本地持久化，八类 stamps 表一次建齐见 android-app.md §2.2）──
+androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "androidxRoom" }
+androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "androidxRoom" }
+androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "androidxRoom" }
+
+# ── Hilt（DI，白名单 #12）──
+hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
+hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
+hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
+
+# ── 网络（白名单 #12，裁定 #2）──
+retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
+retrofit-kotlinx-serialization = { group = "com.squareup.retrofit2", name = "converter-kotlinx-serialization", version.ref = "retrofit" }
+okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
+kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
+
+# ── 图片（白名单 #12）──
+coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
+
+# ── CameraX（M2 打卡扫码；过审依据见 versions 段 androidxCamera 注记）──
+androidx-camera-core = { group = "androidx.camera", name = "camera-core", version.ref = "androidxCamera" }
+androidx-camera-camera2 = { group = "androidx.camera", name = "camera-camera2", version.ref = "androidxCamera" }
+androidx-camera-lifecycle = { group = "androidx.camera", name = "camera-lifecycle", version.ref = "androidxCamera" }
+androidx-camera-view = { group = "androidx.camera", name = "camera-view", version.ref = "androidxCamera" }
+
+# ── QR（白名单 #12，M2 打卡屏消费；依赖已进树但首版无调用面）──
+zxing-android-embedded = { group = "com.journeyapps", name = "zxing-android-embedded", version.ref = "zxingEmbedded" }
+zxing-core = { group = "com.google.zxing", name = "core", version.ref = "zxingCore" }
+
+# ── 二版预留（裁定 #11/#12：ML Kit pose-detection 首版不进依赖树，届时按需放开）──
+# mlkit-pose = { group = "com.google.mlkit", name = "pose-detection", version = "<二版钉版>" }
+
+# ── 测试 ──
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinxCoroutines" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }          # Compose 编译器插件（随 Kotlin 分发）
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" } # @Serializable 数据类（网络层裁定 #2）
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 数据提取规则（API 31+）：cloud-backup 与 device-transfer 一并排除凭据 prefs；
+     键名对应 TokenStore 的 muhe_auth SharedPreferences。训练数据（Room）正常备份 -->
+<data-extraction-rules>
+    <cloud-backup>
+        <exclude domain="sharedpref" path="muhe_auth.xml" />
+    </cloud-backup>
+    <device-transfer>
+        <exclude domain="sharedpref" path="muhe_auth.xml" />
+    </device-transfer>
+</data-extraction-rules>
