@@ -2,10 +2,10 @@ package com.muhe.fit.app
 
 import android.graphics.Color
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import com.muhe.fit.app.navigation.MuheApp
@@ -16,10 +16,13 @@ import javax.inject.Inject
 
 /**
  * 唯一 Activity（单屏 Compose 架构；导航在 navigation/MuheNavHost.kt）。
+ * 基类 FragmentActivity：Credential Manager（androidx.credentials）的 Activity Result
+ * 流程硬要求 FragmentActivity 宿主——device-link 扫码登录的 passkey 注册依赖；Compose/
+ * Hilt/edge-to-edge 全兼容（FragmentActivity extends ComponentActivity）。
  * edge-to-edge + 深色唯一主题（裁定 #1 / C10）——状态栏/导航条底色由 Theme.MuHeFit 与 MuHeTheme 保证。
  */
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+class MainActivity : FragmentActivity() {
 
     @Inject lateinit var syncScheduler: SyncScheduler
 

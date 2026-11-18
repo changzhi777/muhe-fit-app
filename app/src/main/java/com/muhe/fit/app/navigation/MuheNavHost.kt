@@ -44,6 +44,8 @@ import com.muhe.fit.app.screens.CheckInScreen
 import com.muhe.fit.app.screens.LibraryScreen
 import com.muhe.fit.app.screens.CoachScreen
 import com.muhe.fit.app.screens.HomeScreen
+import com.muhe.fit.app.screens.WorkoutHistoryScreen
+import com.muhe.fit.app.screens.WorkoutScreen
 import com.muhe.fit.app.screens.LoginScreen
 import com.muhe.fit.app.screens.PlanScreen
 import com.muhe.fit.app.screens.ProfileScreen
@@ -78,7 +80,17 @@ object Routes {
 
     /** 打卡屏（M2，§3.4）：二级全屏路由，无底栏，首页金刚区「打卡」进入 */
     const val CHECKIN = "checkin"
+
+    /** 训练会话屏（批 2 · MVP）：二级全屏路由，无底栏，▶Start 中央 FAB 进入/恢复 */
+    const val WORKOUT = "workout"
     const val LIBRARY = "library"
+
+    /**
+     * 训练历史屏（批 6 · 编辑模式 UI 闭环）：二级全屏路由，无底栏，「我的」训练数据组进入。
+     * 条目点击 → WorkoutSessionPrefs.setLastEditId 载体（一次性）→ nav(WORKOUT)，
+     * WorkoutScreen ON_RESUME 的 load() 优先消费进编辑模式（见 WorkoutViewModel.load()）。
+     */
+    const val HISTORY = "history"
 }
 
 /** 一级 Tab：选中 Filled / 未选中 Outlined（Material 3 规范），label 取双语资源 */
@@ -143,7 +155,7 @@ fun MuheApp() {
         // 全屏内容不再画进系统栏底下（此前显式清零导致状态栏遮挡标题行，2026-11-18 修复）
         // login / coach / checkin 为全屏二级页：隐藏底栏，Scaffold padding 自动回收导航条空间
         bottomBar = {
-            if (currentRoute != Routes.LOGIN && currentRoute != Routes.COACH && currentRoute != Routes.CHECKIN && currentRoute != Routes.LIBRARY) {
+            if (currentRoute != Routes.LOGIN && currentRoute != Routes.COACH && currentRoute != Routes.CHECKIN && currentRoute != Routes.LIBRARY && currentRoute != Routes.WORKOUT && currentRoute != Routes.HISTORY) {
                 // FAB 放 NavigationBar 外的 Box：NavigationBar 的 Surface 按 shape 裁切子内容，
                 // 凸出上缘的圆弧会被削平（2026-11-19 真机实测 FAB bounds 削平在栏上缘）；
                 // Box 不裁切，TopCenter + offset(y=-24dp) 实现 §3.1 中央凸起。
@@ -162,7 +174,7 @@ fun MuheApp() {
                     // ▶Start 中央主行动点（§3.1）：不上 Tab 位、不进路由，凸出底栏上缘；
                     // 有进行中会话时恢复进入（M1 会话屏落地后接 Workout 路由）
                     FloatingActionButton(
-                        onClick = { Toast.makeText(context, startPendingText, Toast.LENGTH_SHORT).show() },
+                        onClick = { navController.navigate(Routes.WORKOUT) },
                         modifier = Modifier
                             .align(Alignment.TopCenter)
                             .offset(y = (-24).dp)
@@ -205,11 +217,20 @@ fun MuheApp() {
                     onPairClick = { navController.navigate(Routes.LOGIN) },
                     onCoachClick = { navController.navigate(Routes.COACH) },
                     onLibraryClick = { navController.navigate(Routes.LIBRARY) },
+                    onHistoryClick = { navController.navigate(Routes.HISTORY) },
                 )
             }
             composable(Routes.COACH) {
                 // AI 教练对话屏（M2 骨架）：数据源 StubCoachApi demo 两轮，Go 原生服务端随服务端批次实装
                 CoachScreen(onBack = { navController.popBackStack() })
+            }
+            composable(Routes.WORKOUT) {
+                // 训练会话屏（批 2 · MVP）：▶Start 真实目的地；onFinished 回底栏 Tab。
+                // 批 6 · 编辑模式接线：历史屏选中条目 → WorkoutSessionPrefs.setLastEditId
+                // 载体（一次性）→ 本屏 ON_RESUME 触发 WorkoutViewModel.load() 优先消费
+                //（consumeLastEditId 读后即清 → 编辑档 prefs.save 落盘 + editingWorkoutId
+                // 标记，完成时同 id REPLACE 覆盖原条目）。消费点在 load() 内部，NavHost 零竞序处理。
+                WorkoutScreen(onFinished = { navController.popBackStack() })
             }
             composable(Routes.CHECKIN) {
                 // 打卡屏（M2）：会员码亮码 + attendance 到场记录 + 相机扫码添加（禁手输）
@@ -218,6 +239,14 @@ fun MuheApp() {
             composable(Routes.LIBRARY) {
                 // 动作库（M2）：catalogue 5,632 正身 assets 精简包 + 中英搜索（裁定：入口挂「我的」二级页）
                 LibraryScreen()
+            }
+            composable(Routes.HISTORY) {
+                // 训练历史屏（批 6 · 编辑模式 UI 闭环）：分组列表 + 条目转编辑
+                //（载体 setLastEditId → 训练屏 ON_RESUME load() 优先消费进编辑模式）
+                WorkoutHistoryScreen(
+                    onBack = { navController.popBackStack() },
+                    onOpen = { navController.navigate(Routes.WORKOUT) },
+                )
             }
             composable(Routes.LOGIN) {
                 // 扫码已 V1.2 真接线（LoginScreen 内共享 ScanOverlay → PairViewModel.onScannedCode）

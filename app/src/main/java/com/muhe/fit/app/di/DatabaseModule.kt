@@ -31,4 +31,11 @@ object DatabaseModule {
 
     @Provides
     fun attendanceDao(db: MuheDatabase): com.muhe.fit.app.data.dao.AttendanceDao = db.attendanceDao()
+
+    // ── Workout 屏（批 2 · MVP）：训练会话落库 + StartChooser 例行清单 ──
+    @Provides
+    fun workoutDao(db: MuheDatabase): com.muhe.fit.app.data.dao.WorkoutDao = db.workoutDao()
+
+    @Provides
+    fun routineDao(db: MuheDatabase): com.muhe.fit.app.data.dao.RoutineDao = db.routineDao()
 }

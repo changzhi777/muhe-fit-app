@@ -35,6 +35,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -84,11 +85,21 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.muhe.fit.app.R
 import com.muhe.fit.app.ui.theme.MuHeTheme
 import com.muhe.fit.app.ui.theme.muheExtended
+import com.muhe.fit.app.net.PasskeyManager
 import com.muhe.fit.app.viewmodel.AuthApi
+import com.muhe.fit.app.viewmodel.LinkApi
+import com.muhe.fit.app.viewmodel.LinkErrorKind
+import com.muhe.fit.app.viewmodel.LinkOptionsResult
+import com.muhe.fit.app.viewmodel.LinkPairResult
+import com.muhe.fit.app.viewmodel.LinkStep
+import com.muhe.fit.app.viewmodel.LinkUiState
+import com.muhe.fit.app.viewmodel.LinkVerifyResult
+import com.muhe.fit.app.viewmodel.LinkViewModel
 import com.muhe.fit.app.viewmodel.LoginUiState
 import com.muhe.fit.app.viewmodel.PairViewModel
 import com.muhe.fit.app.viewmodel.RedeemResult
 import kotlinx.coroutines.delay
+import kotlinx.serialization.json.JsonObject
 
 /**
  * 登录屏（M1 收尾清单 #3，login-design.md V0.1 逐区 1:1）：
@@ -105,20 +116,31 @@ fun LoginScreen(
     onGuest: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: PairViewModel = hiltViewModel(),
+    linkViewModel: LinkViewModel = hiltViewModel(),
 ) {
     val state = viewModel.uiState
+    val linkState = linkViewModel.uiState
     val view = LocalView.current
+    val context = LocalContext.current
     var scanning by rememberSaveable { mutableStateOf(false) }
+    // 扫码入口来源（Pair=主 CTA 配对码 / Link=扫码加入）：同一 ScanOverlay 复用，onFound
+    // 按 ?link= URL 正则分流（LinkViewModel.LINK_CODE_REGEX）——两码互认互不排斥
+    var scanMode by rememberSaveable { mutableStateOf(ScanMode.Pair) }
 
-    // 六状态消费：成功过场触觉 + 600ms 停留后导航；配对码错误轻震一次（§六触觉三处之二）
-    LaunchedEffect(state) {
-        when (state) {
-            LoginUiState.PairSuccess -> {
+    // 六状态 + link 四步消费：成功过场触觉 + 600ms 停留后导航（pair/link 两机共用）；配对码错误轻震一次（§六触觉三处之二）
+    LaunchedEffect(state, linkState) {
+        when {
+            state == LoginUiState.PairSuccess -> {
                 view.hapticConfirm()
                 delay(600)
                 onPaired()
             }
-            LoginUiState.CodeInvalid -> view.hapticTick()
+            linkState is LinkUiState.LinkSuccess -> {
+                view.hapticConfirm()
+                delay(600)
+                onPaired()
+            }
+            state == LoginUiState.CodeInvalid -> view.hapticTick()
             else -> Unit
         }
     }
@@ -164,12 +186,28 @@ fun LoginScreen(
                     // 扫码按钮不置灰（可重试）。触发路径随 M2 权限请求接入生效
                     CameraDeniedRow(visible = state == LoginUiState.CameraDenied)
                     Spacer(Modifier.height(12.dp)) // 主 CTA ↔ 次按钮 12dp
+                    // 「扫码加入」次级入口（device-link 通道）：扫电脑端登录二维码 → passkey
+                    // 注册 → Bearer 兑换一键完成；与配对码扫码共用 ScanOverlay，正则分流
+                    PressableSecondaryButton(
+                        label = stringResource(R.string.login_cta_link),
+                        onClick = {
+                            scanMode = ScanMode.Link
+                            scanning = true
+                        },
+                    )
+                    Spacer(Modifier.height(8.dp)) // link 入口 ↔ 手输按钮 8dp（同级紧凑）
                     ManualEntry(
                         state = state,
                         pairingCode = viewModel.pairingCode,
                         baseUrl = viewModel.baseUrl,
                         onCodeInput = viewModel::onCodeInput,
                         onRedeem = viewModel::redeem,
+                    )
+                    // device-link 链路状态区（四步进行态 / 七类错误就近 banner，复用 ErrorBanner 风格）
+                    LinkStatusCard(
+                        state = linkState,
+                        baseUrl = viewModel.baseUrl,
+                        onRetry = { linkViewModel.retry(context) },
                     )
                     Spacer(Modifier.height(16.dp)) // 次按钮 ↔ 辅助说明 16dp
                     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
@@ -209,14 +247,25 @@ fun LoginScreen(
         // 扫码成功过场覆盖层（§五）：scrim 60% + 对勾圆徽 scale-in + 600ms 后导航（上方 LaunchedEffect）
         PairingOverlay(visible = state == LoginUiState.PairSuccess)
 
-        // 扫码覆盖层（V1.2 真接线）：满 8 位直接进兑换；被拒点亮认证区 inline 行（CameraDeniedRow）
+        // 扫码覆盖层（V1.2 真接线 + device-link 分流）：同一 ScanOverlay 复用，onFound 按
+        // ?link= URL 正则分流——URL → LinkViewModel（扫桌面端登录二维码）；其余 → 配对码
+        // clean 满 8 位即兑。两入口（主 CTA / 扫码加入）共用此分流，title/hint 按入口切换；
+        // 相机被拒仍点亮认证区 inline 行（CameraDeniedRow）
         AnimatedVisibility(visible = scanning, enter = fadeIn(tween(180)), exit = fadeOut(tween(180))) {
             ScanOverlay(
-                title = stringResource(R.string.login_cta_scan),
-                hint = stringResource(R.string.login_scan_hint),
-                onFound = { code, _ ->
+                title = stringResource(
+                    if (scanMode == ScanMode.Pair) R.string.login_cta_scan else R.string.link_scan_title,
+                ),
+                hint = stringResource(
+                    if (scanMode == ScanMode.Pair) R.string.login_scan_hint else R.string.link_scan_hint,
+                ),
+                onFound = { raw, _ ->
                     scanning = false
-                    viewModel.onScannedCode(code)
+                    if (LinkViewModel.LINK_CODE_REGEX.containsMatchIn(raw)) {
+                        linkViewModel.onScannedLinkUrl(raw, context)
+                    } else {
+                        viewModel.onScannedCode(raw)
+                    }
                 },
                 onDismiss = { scanning = false },
                 onDenied = viewModel::onCameraDenied,
@@ -705,6 +754,86 @@ private fun View.hapticTick() {
     performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
 }
 
+/** 扫码入口来源（同屏两入口共用 ScanOverlay，正则分流见 LoginScreen onFound）。 */
+private enum class ScanMode { Pair, Link }
+
+/** link 四步分步文案（LinkViewModel.Linking 消费）。 */
+@Composable
+private fun linkStepText(step: LinkStep): String = when (step) {
+    LinkStep.FetchOptions -> stringResource(R.string.link_step_options)
+    LinkStep.RegisterPasskey -> stringResource(R.string.link_step_passkey)
+    LinkStep.Verify -> stringResource(R.string.link_step_verify)
+    LinkStep.Session -> stringResource(R.string.link_step_session)
+}
+
+/** link 七类错误文案就近映射（Unreachable 带 baseUrl 参；重试按钮复用 login_retry）。 */
+@Composable
+private fun linkErrorText(kind: LinkErrorKind, baseUrl: String): String = when (kind) {
+    LinkErrorKind.Expired -> stringResource(R.string.link_error_expired)
+    LinkErrorKind.Unreachable -> stringResource(R.string.link_error_unreachable, baseUrl)
+    LinkErrorKind.NotQr -> stringResource(R.string.link_error_not_qr)
+    LinkErrorKind.PasskeyUnsupported -> stringResource(R.string.link_error_passkey)
+    LinkErrorKind.PasskeyFailed -> stringResource(R.string.link_error_passkey_fail)
+    LinkErrorKind.VerifyFailed -> stringResource(R.string.link_error_verify)
+    LinkErrorKind.CredentialExists -> stringResource(R.string.link_error_exists)
+}
+
+/**
+ * device-link 链路状态区：Linking = surfaceContainerLow 圆角卡（加入账号 + 分步文案 + 小进度圈，
+ * animateContentSize 200ms 跟随步进，§六口径）；LinkError = 复用 ErrorBanner（重试从 options
+ * 重起全链路，options 码不消费、passkey 未烧时可原码重来；用户取消 passkey 回 Idle 不进此区）。
+ */
+@Composable
+private fun LinkStatusCard(
+    state: LinkUiState,
+    baseUrl: String,
+    onRetry: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    when (state) {
+        is LinkUiState.Linking -> Column(
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(top = 8.dp)
+                .clip(RoundedCornerShape(12.dp))
+                .background(MaterialTheme.colorScheme.surfaceContainerLow)
+                .animateContentSize(tween(200, easing = FastOutSlowInEasing))
+                .padding(12.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp),
+        ) {
+            Text(
+                text = if (state.profileName.isEmpty()) {
+                    stringResource(R.string.link_status_joining_anon)
+                } else {
+                    stringResource(R.string.link_status_joining, state.profileName)
+                },
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurface,
+            )
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(14.dp),
+                    strokeWidth = 2.dp,
+                    color = MaterialTheme.muheExtended.textTertiary,
+                )
+                Spacer(Modifier.width(8.dp))
+                Text(
+                    text = linkStepText(state.step),
+                    style = MaterialTheme.typography.bodySmall.copy(lineHeight = 18.sp),
+                    color = MaterialTheme.muheExtended.textTertiary,
+                )
+            }
+        }
+        is LinkUiState.LinkError -> ErrorBanner(
+            visible = true,
+            text = linkErrorText(state.kind, baseUrl),
+            onRetry = onRetry,
+            modifier = modifier.padding(top = 8.dp),
+        )
+        else -> Unit
+    }
+}
+
 @Preview(showBackground = true, backgroundColor = 0xFF0F1319, widthDp = 360, heightDp = 720)
 @Composable
 private fun LoginScreenPreview() {
@@ -715,6 +844,7 @@ private fun LoginScreenPreview() {
             onPaired = {},
             onGuest = {},
             viewModel = PairViewModel(PreviewAuthApi),
+            linkViewModel = PreviewLinkViewModel,
         )
     }
 }
@@ -724,3 +854,14 @@ private object PreviewAuthApi : AuthApi {
     override suspend fun redeem(code: String): RedeemResult = RedeemResult.InvalidCode
     override suspend fun ping(): Boolean = false
 }
+
+/** 仅 @Preview 用：link 链路恒不可达（状态区静默），不参与 Hilt 绑定。 */
+private object PreviewLinkApi : LinkApi {
+    override suspend fun fetchOptions(code: String): LinkOptionsResult = LinkOptionsResult.Unreachable
+    override suspend fun verify(code: String, cid: String, credential: JsonObject): LinkVerifyResult =
+        LinkVerifyResult.Unreachable
+    override suspend fun mintPairCode(): LinkPairResult = LinkPairResult.Unreachable
+    override suspend fun redeemPair(code: String): RedeemResult = RedeemResult.Unreachable
+}
+
+private val PreviewLinkViewModel = LinkViewModel(PreviewLinkApi, PasskeyManager())

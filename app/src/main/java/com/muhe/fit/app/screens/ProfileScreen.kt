@@ -66,7 +66,7 @@ private val DATA_ITEMS = listOf(
  * 我的 · 聚合页（android-app.md §3.3 分组顺序）：
  * 账号卡（登录态 + 本月训练聚合）→ 训练数据组 → 设置组 → 数据组 → 关于行。
  * M2 数据充实：登录态走 TokenStore、训练历史/围度行副标题读 Room 真数（无表的行为保持占位）、
- * AI 教练行接线 nav(coach)。Admin 入口仅 admin 角色可见（§3.3），角色体系落地后补；
+ * AI 教练行接线 nav(coach)；训练历史行接线 nav(history)（批 6 · 编辑模式 UI 闭环）。Admin 入口仅 admin 角色可见（§3.3），角色体系落地后补；
  * 其余项二级行为随所属域批次接入，骨架期统一占位 Toast。
  */
 @Composable
@@ -74,6 +74,7 @@ fun ProfileScreen(
     onPairClick: () -> Unit,
     onCoachClick: () -> Unit,
     onLibraryClick: () -> Unit,
+    onHistoryClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val viewModel: ProfileViewModel = hiltViewModel()
@@ -96,6 +97,7 @@ fun ProfileScreen(
         onPairClick = onPairClick,
         onCoachClick = onCoachClick,
         onLibraryClick = onLibraryClick,
+        onHistoryClick = onHistoryClick,
         onLogout = viewModel::logout,
         modifier = modifier,
     )
@@ -112,6 +114,7 @@ private fun ProfileBody(
     onPairClick: () -> Unit,
     onCoachClick: () -> Unit,
     onLibraryClick: () -> Unit,
+    onHistoryClick: () -> Unit,
     onLogout: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -142,7 +145,8 @@ private fun ProfileBody(
             ProfileRow(
                 label = stringResource(res),
                 subtitle = subtitleFor(res, workoutCount, measurementCount),
-                onClick = onEntryClick,
+                // 批 6：训练历史行真导航（其余行仍 Toast 占位，随所属批次接入）
+                onClick = if (res == R.string.entry_history) onHistoryClick else onEntryClick,
             )
         }
 
@@ -311,6 +315,7 @@ private fun ProfileScreenPreview() {
             onPairClick = {},
             onCoachClick = {},
             onLibraryClick = {},
+            onHistoryClick = {},
             onLogout = {},
         )
     }

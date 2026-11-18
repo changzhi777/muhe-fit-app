@@ -20,6 +20,15 @@ androidxRoom = "2.6.1"
 # CameraX（M2 打卡扫码取流）——白名单外依赖过审注记：打卡屏是 M2 清单首项（android-app.md §3.4），
 # 用户批准 M2 批次启动即隐含放行；仅打卡扫码消费，不另开用途。1.4.x 稳定组。
 androidxCamera = "1.4.2"
+# Credentials Manager（device-link 扫码登录注册 passkey）——白名单外依赖过审注记：
+# 「扫桌面端 QR 码登录」链路必需（Credential Manager 是 device-link passkey 注册的唯一
+# 系统入口，无替代路径）；用户已知情放行。1.3.0 稳定组；minSdk 26 兼容（API 26-30 经
+# credentials-play-services-auth 走 Google Play services 降级，31+ 原生）。
+androidxCredentials = "1.3.0"
+# FragmentActivity（Credential Manager createCredential 硬要求宿主为 FragmentActivity；
+# navigation-compose 已传递引入 fragment，显式钉版仅供 MainActivity 基类与 PasskeyManager
+# 的编译期符号可见）。
+androidxFragment = "1.8.5"
 hiltNavigationCompose = "1.2.0"
 # ── 网络（裁定 #2：Retrofit + OkHttp + kotlinx.serialization）──
 retrofit = "2.11.0"
@@ -46,6 +55,11 @@ androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = 
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "androidxLifecycle" }
 androidx-lifecycle-viewmodel-compose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "androidxLifecycle" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "androidxActivity" }
+androidx-fragment-ktx = { group = "androidx.fragment", name = "fragment-ktx", version.ref = "androidxFragment" }
+
+# ── Credentials（device-link 扫码登录 passkey 注册；白名单外过审依据见 versions 段注记）──
+androidx-credentials = { group = "androidx.credentials", name = "credentials", version.ref = "androidxCredentials" }
+androidx-credentials-play-services-auth = { group = "androidx.credentials", name = "credentials-play-services-auth", version.ref = "androidxCredentials" }
 
 # ── Room（本地持久化，八类 stamps 表一次建齐见 android-app.md §2.2）──
 androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "androidxRoom" }

@@ -89,6 +89,22 @@
     <string name="login_camera_denied">Camera permission missing; scanning unavailable</string>
     <string name="login_camera_grant">Grant access</string>
     <string name="login_pair_success">Paired</string>
+    <string name="login_cta_link">Scan to join</string>
+    <string name="link_scan_title">Scan to join an account</string>
+    <string name="link_scan_hint">Aim at the login QR code shown in your desktop browser</string>
+    <string name="link_status_joining">Joining account %1$s</string>
+    <string name="link_status_joining_anon">Joining account</string>
+    <string name="link_step_options">Connecting to server…</string>
+    <string name="link_step_passkey">Creating a passkey — confirm it in the system prompt…</string>
+    <string name="link_step_verify">Verifying and signing in…</string>
+    <string name="link_step_session">Getting a mobile session…</string>
+    <string name="link_error_expired">This QR code has expired — refresh it on your desktop and scan again</string>
+    <string name="link_error_unreachable">Cannot reach %1$s — check your network and try again</string>
+    <string name="link_error_not_qr">Not a login QR code — scan the one shown on your desktop</string>
+    <string name="link_error_passkey">This device does not support passkeys — use the pairing code instead</string>
+    <string name="link_error_passkey_fail">Could not create the passkey — try again</string>
+    <string name="link_error_verify">Verification failed — try again</string>
+    <string name="link_error_exists">This passkey is already registered to the account — use the pairing code scan to sign in</string>
 
     <!-- AI Coach chat screen (M2 skeleton; contract api-go/openapi.yaml /api/coach/*, StubCoachApi demo) -->
     <string name="coach_title">Coach</string>

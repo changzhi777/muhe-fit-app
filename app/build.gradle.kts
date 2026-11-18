@@ -74,6 +74,11 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.fragment.ktx)   // Credential Manager 宿主要求 FragmentActivity（MainActivity 基类）
+
+    // ── Credentials（device-link 扫码登录 passkey 注册；白名单外过审依据见 libs.versions.toml 注记）──
+    implementation(libs.androidx.credentials)
+    implementation(libs.androidx.credentials.play.services.auth)
 
     // ── Room（KSP 编译器）──
     implementation(libs.androidx.room.runtime)
